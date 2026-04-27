@@ -3,10 +3,176 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>大軍的網站</title>
+  <title>dajcxun 的日常</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf8f5;
+      --ink: #2c2c2c;
+      --muted: #999;
+      --accent: #c8a96e;
+      --border: #e8e3db;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Noto Serif TC', serif;
+      line-height: 1.9;
+    }
+
+    header {
+      text-align: center;
+      padding: 5rem 2rem 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .site-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 3rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .site-subtitle {
+      font-size: 0.85rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav a {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--ink); }
+
+    .wrapper {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .post {
+      margin-bottom: 4rem;
+      padding-bottom: 4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .post:last-child { border-bottom: none; }
+
+    .post-date {
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      margin-bottom: 0.75rem;
+    }
+
+    .post-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.7rem;
+      font-weight: 400;
+      line-height: 1.4;
+      margin-bottom: 1rem;
+    }
+
+    .post-body {
+      font-size: 0.95rem;
+      color: #444;
+      line-height: 2;
+    }
+
+    .post-body p { margin-bottom: 1rem; }
+
+    .post-img {
+      width: 100%;
+      height: 240px;
+      background: var(--border);
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+    }
+
+    .post-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.15rem 0.6rem;
+      letter-spacing: 0.1em;
+      margin-top: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+  </style>
 </head>
 <body>
-  <h1>這裡是大軍的網站</h1>
-  <p>網站建置中...</p>
+
+  <header>
+    <div class="site-title">dajcxun</div>
+    <div class="site-subtitle">生活紀錄 · 隨筆</div>
+  </header>
+
+  <nav>
+    <a href="#">全部</a>
+    <a href="#">生活</a>
+    <a href="#">食記</a>
+    <a href="#">旅遊</a>
+    <a href="#">關於</a>
+  </nav>
+
+  <div class="wrapper">
+
+    <article class="post">
+      <div class="post-date">2025 年 4 月 27 日</div>
+      <h2 class="post-title">第一篇文章</h2>
+      <div class="post-img">[ 放一張照片 ]</div>
+      <div class="post-body">
+        <p>在這裡寫你想說的話。可以是今天發生的事、一個隨機的想法、或是一頓好吃的飯。</p>
+        <p>網站是自己的，想寫什麼都行。</p>
+      </div>
+      <span class="post-tag">生活</span>
+    </article>
+
+    <article class="post">
+      <div class="post-date">2025 年 4 月 20 日</div>
+      <h2 class="post-title">這裡放第二篇的標題</h2>
+      <div class="post-body">
+        <p>這是第二篇文章的內容，之後直接在 GitHub 上改這個檔案就可以新增文章。</p>
+      </div>
+      <span class="post-tag">隨筆</span>
+    </article>
+
+  </div>
+
+  <footer>
+    © 2025 dajcxun · 用 GitHub Pages 架設
+  </footer>
+
 </body>
 </html>
