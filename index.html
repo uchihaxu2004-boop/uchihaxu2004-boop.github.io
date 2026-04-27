@@ -1,178 +1,395 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>dajcxun 的日常</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <title>Dajun's Personal Site</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #faf8f5;
-      --ink: #2c2c2c;
-      --muted: #999;
-      --accent: #c8a96e;
-      --border: #e8e3db;
+      --bg: #0a0a0a;
+      --surface: #111;
+      --border: #222;
+      --text: #e8e8e8;
+      --muted: #555;
+      --white: #fff;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       background: var(--bg);
-      color: var(--ink);
-      font-family: 'Noto Serif TC', serif;
-      line-height: 1.9;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1.8;
     }
 
+    /* HEADER */
     header {
       text-align: center;
-      padding: 5rem 2rem 3rem;
+      padding: 6rem 2rem 4rem;
       border-bottom: 1px solid var(--border);
     }
 
     .site-title {
-      font-family: 'Instrument Serif', serif;
-      font-size: 3rem;
-      font-weight: 400;
-      letter-spacing: 0.02em;
-      margin-bottom: 0.5rem;
+      font-family: 'Noto Serif TC', serif;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.3;
+      margin-bottom: 1rem;
     }
 
     .site-subtitle {
-      font-size: 0.85rem;
+      font-size: 0.78rem;
       color: var(--muted);
-      letter-spacing: 0.1em;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
     }
 
+    /* NAV */
     nav {
       display: flex;
       justify-content: center;
-      gap: 2.5rem;
-      padding: 1.25rem;
+      gap: 0;
       border-bottom: 1px solid var(--border);
+      overflow-x: auto;
     }
 
     nav a {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--muted);
       text-decoration: none;
-      letter-spacing: 0.08em;
-      transition: color 0.2s;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 1.1rem 1.75rem;
+      border-right: 1px solid var(--border);
+      transition: all 0.2s;
+      white-space: nowrap;
     }
 
-    nav a:hover { color: var(--ink); }
+    nav a:first-child { border-left: 1px solid var(--border); }
+    nav a:hover { color: var(--white); background: var(--surface); }
+    nav a.active { color: var(--white); }
 
+    /* WRAPPER */
     .wrapper {
-      max-width: 680px;
+      max-width: 700px;
       margin: 0 auto;
-      padding: 4rem 2rem;
+      padding: 5rem 2rem;
     }
 
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* HOME PAGE */
+    .home-greeting {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.4;
+      margin-bottom: 1.5rem;
+    }
+
+    .home-greeting em {
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    .home-desc {
+      font-size: 0.9rem;
+      color: #666;
+      line-height: 1.9;
+      max-width: 480px;
+      margin-bottom: 3rem;
+    }
+
+    .home-links {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .home-link {
+      background: var(--bg);
+      padding: 1.75rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: block;
+    }
+
+    .home-link:hover { background: var(--surface); }
+
+    .home-link-title {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .home-link-desc {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.1rem;
+      color: var(--white);
+    }
+
+    /* POST */
     .post {
       margin-bottom: 4rem;
       padding-bottom: 4rem;
       border-bottom: 1px solid var(--border);
     }
 
-    .post:last-child { border-bottom: none; }
+    .post:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
 
     .post-date {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--muted);
-      letter-spacing: 0.12em;
-      margin-bottom: 0.75rem;
+      letter-spacing: 0.1em;
+    }
+
+    .post-tag {
+      font-size: 0.65rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.1rem 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
 
     .post-title {
       font-family: 'Instrument Serif', serif;
-      font-size: 1.7rem;
+      font-size: 1.6rem;
       font-weight: 400;
-      line-height: 1.4;
+      color: var(--white);
+      line-height: 1.35;
       margin-bottom: 1rem;
     }
 
     .post-body {
-      font-size: 0.95rem;
-      color: #444;
-      line-height: 2;
+      font-size: 0.92rem;
+      color: #888;
+      line-height: 1.9;
     }
 
-    .post-body p { margin-bottom: 1rem; }
+    .post-body p { margin-bottom: 0.8rem; }
 
     .post-img {
       width: 100%;
-      height: 240px;
-      background: var(--border);
+      height: 260px;
+      background: var(--surface);
+      border: 1px solid var(--border);
       margin: 1.5rem 0;
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* PLACEHOLDER */
+    .placeholder {
+      border: 1px dashed var(--border);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .placeholder-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.4rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .placeholder-desc {
       font-size: 0.8rem;
-      letter-spacing: 0.1em;
+      color: #333;
+      letter-spacing: 0.05em;
     }
 
-    .post-tag {
-      display: inline-block;
-      font-size: 0.7rem;
-      color: var(--accent);
-      border: 1px solid var(--accent);
-      padding: 0.15rem 0.6rem;
-      letter-spacing: 0.1em;
-      margin-top: 1rem;
-    }
+    /* PAGE */
+    .page { display: none; }
+    .page.active { display: block; }
 
+    /* FOOTER */
     footer {
       text-align: center;
       padding: 3rem 2rem;
       border-top: 1px solid var(--border);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--muted);
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
+    }
+
+    @media (max-width: 480px) {
+      .home-links { grid-template-columns: 1fr; }
+      nav a { padding: 1rem 1.25rem; }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="site-title">dajcxun</div>
-    <div class="site-subtitle">生活紀錄 · 隨筆</div>
+    <div class="site-title">大軍的個人網站</div>
+    <div class="site-subtitle">dajcxun.com</div>
   </header>
 
   <nav>
-    <a href="#">全部</a>
-    <a href="#">生活</a>
-    <a href="#">食記</a>
-    <a href="#">旅遊</a>
-    <a href="#">關於</a>
+    <a href="#" class="active" onclick="showPage('home', this)">Home</a>
+    <a href="#" onclick="showPage('daily', this)">Daily</a>
+    <a href="#" onclick="showPage('travel', this)">Travel</a>
+    <a href="#" onclick="showPage('portfolio', this)">Portfolio</a>
+    <a href="#" onclick="showPage('resume', this)">Resume</a>
   </nav>
 
-  <div class="wrapper">
-
-    <article class="post">
-      <div class="post-date">2025 年 4 月 27 日</div>
-      <h2 class="post-title">第一篇文章</h2>
-      <div class="post-img">[ 放一張照片 ]</div>
-      <div class="post-body">
-        <p>在這裡寫你想說的話。可以是今天發生的事、一個隨機的想法、或是一頓好吃的飯。</p>
-        <p>網站是自己的，想寫什麼都行。</p>
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="wrapper">
+      <div class="section-label">Home</div>
+      <div class="home-greeting">Hey, I'm Dajun.<br><em>Welcome to my little corner of the internet.</em></div>
+      <p class="home-desc">This is where I keep my daily thoughts, travel memories, and everything in between. Have a look around.</p>
+      <div class="home-links">
+        <a class="home-link" href="#" onclick="showPage('daily', document.querySelectorAll('nav a')[1])">
+          <div class="home-link-title">Daily</div>
+          <div class="home-link-desc">Everyday moments</div>
+        </a>
+        <a class="home-link" href="#" onclick="showPage('travel', document.querySelectorAll('nav a')[2])">
+          <div class="home-link-title">Travel</div>
+          <div class="home-link-desc">Places I've been</div>
+        </a>
+        <a class="home-link" href="#" onclick="showPage('portfolio', document.querySelectorAll('nav a')[3])">
+          <div class="home-link-title">Portfolio</div>
+          <div class="home-link-desc">Work & projects</div>
+        </a>
+        <a class="home-link" href="#" onclick="showPage('resume', document.querySelectorAll('nav a')[4])">
+          <div class="home-link-title">Resume</div>
+          <div class="home-link-desc">My background</div>
+        </a>
       </div>
-      <span class="post-tag">生活</span>
-    </article>
+    </div>
+  </div>
 
-    <article class="post">
-      <div class="post-date">2025 年 4 月 20 日</div>
-      <h2 class="post-title">這裡放第二篇的標題</h2>
-      <div class="post-body">
-        <p>這是第二篇文章的內容，之後直接在 GitHub 上改這個檔案就可以新增文章。</p>
+  <!-- DAILY -->
+  <div class="page" id="page-daily">
+    <div class="wrapper">
+      <div class="section-label">Daily</div>
+
+      <article class="post">
+        <div class="post-meta">
+          <span class="post-date">Apr 27, 2025</span>
+          <span class="post-tag">Daily</span>
+        </div>
+        <h2 class="post-title">Your first post title goes here</h2>
+        <div class="post-img">Photo</div>
+        <div class="post-body">
+          <p>Write whatever you want here — what happened today, a random thought, something you ate, something you saw.</p>
+          <p>This is your space.</p>
+        </div>
+      </article>
+
+      <article class="post">
+        <div class="post-meta">
+          <span class="post-date">Apr 20, 2025</span>
+          <span class="post-tag">Daily</span>
+        </div>
+        <h2 class="post-title">Second post title</h2>
+        <div class="post-body">
+          <p>Add more posts by duplicating the article block in the HTML file on GitHub.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- TRAVEL -->
+  <div class="page" id="page-travel">
+    <div class="wrapper">
+      <div class="section-label">Travel</div>
+
+      <article class="post">
+        <div class="post-meta">
+          <span class="post-date">Mar 2025</span>
+          <span class="post-tag">Travel</span>
+        </div>
+        <h2 class="post-title">Your first travel entry</h2>
+        <div class="post-img">Photo</div>
+        <div class="post-body">
+          <p>Where did you go? What did you see? Write it down here.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- PORTFOLIO -->
+  <div class="page" id="page-portfolio">
+    <div class="wrapper">
+      <div class="section-label">Portfolio</div>
+      <div class="placeholder">
+        <div class="placeholder-title">Coming Soon</div>
+        <div class="placeholder-desc">Projects and work will be added here.</div>
       </div>
-      <span class="post-tag">隨筆</span>
-    </article>
+    </div>
+  </div>
 
+  <!-- RESUME -->
+  <div class="page" id="page-resume">
+    <div class="wrapper">
+      <div class="section-label">Resume</div>
+      <div class="placeholder">
+        <div class="placeholder-title">Coming Soon</div>
+        <div class="placeholder-desc">Resume will be uploaded here.</div>
+      </div>
+    </div>
   </div>
 
   <footer>
-    © 2025 dajcxun · 用 GitHub Pages 架設
+    © 2025 Dajun · Built with GitHub Pages
   </footer>
+
+  <script>
+    function showPage(name, el) {
+      event.preventDefault();
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+      document.getElementById('page-' + name).classList.add('active');
+      if (el) el.classList.add('active');
+    }
+  </script>
 
 </body>
 </html>
