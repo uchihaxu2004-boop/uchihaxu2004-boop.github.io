@@ -1,536 +1,230 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>星軌 - 個人宇宙</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;500&family=Playfair+Display:ital@0;1&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-color: #0b1121;
-      --surface-color: rgba(30, 41, 59, 0.5);
-      --border-color: rgba(148, 163, 184, 0.15);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --accent: #38bdf8;
-      --accent-glow: rgba(56, 189, 248, 0.4);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大軍的個人網站</title>
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      font-family: 'Space Grotesk', 'Noto Serif TC', sans-serif;
-      line-height: 1.8;
-      overflow-x: hidden;
-      cursor: none; /* 隱藏預設游標 */
-    }
+<style>
+:root{
+  --bg:#0a0a0a;
+  --text:#eaeaea;
+  --muted:#555;
+  --border:#1a1a1a;
+}
 
-    /* 動態光暈背景 */
-    .bg-orbs {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      pointer-events: none;
-      z-index: -1;
-      overflow: hidden;
-    }
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.4;
-      animation: float 20s infinite ease-in-out alternate;
-    }
-    .orb-1 {
-      width: 40vw; height: 40vw;
-      background: radial-gradient(circle, #1e3a8a, transparent 70%);
-      top: -10%; left: -10%;
-    }
-    .orb-2 {
-      width: 30vw; height: 30vw;
-      background: radial-gradient(circle, #065f46, transparent 70%);
-      bottom: -10%; right: -5%;
-      animation-delay: -5s;
-    }
+*{margin:0;padding:0;box-sizing:border-box;}
 
-    @keyframes float {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(50px, 50px) scale(1.1); }
-    }
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  line-height:1.8;
+}
 
-    /* 自訂游標 */
-    .cursor-dot {
-      position: fixed;
-      width: 6px; height: 6px;
-      background: var(--accent);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-    }
-    .cursor-outline {
-      position: fixed;
-      width: 40px; height: 40px;
-      border: 1px solid var(--accent-glow);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%, -50%);
-      transition: width 0.2s, height 0.2s, background-color 0.2s;
-    }
-    body:has(a:hover) .cursor-outline,
-    body:has(button:hover) .cursor-outline {
-      width: 60px; height: 60px;
-      background-color: rgba(56, 189, 248, 0.1);
-      border-color: var(--accent);
-    }
+/* HEADER */
+header{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+}
 
-    /* 頂部 Header */
-    header {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      position: relative;
-    }
+.title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(3rem,8vw,5rem);
+  font-weight:400;
+}
 
-    .hero-subtitle {
-      font-size: 0.8rem;
-      color: var(--accent);
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 1s ease 0.2s forwards;
-    }
+.subtitle{
+  margin-top:1rem;
+  font-size:0.8rem;
+  color:var(--muted);
+  letter-spacing:0.2em;
+}
 
-    .hero-title {
-      font-family: 'Playfair Display', 'Noto Serif TC', serif;
-      font-size: clamp(3rem, 8vw, 6rem);
-      font-weight: 500;
-      line-height: 1.2;
-      opacity: 0;
-      animation: fadeUp 1s ease 0.4s forwards;
-    }
-    .hero-title span {
-      font-style: italic;
-      color: var(--text-muted);
-      font-weight: 300;
-    }
+/* NAV */
+nav{
+  display:flex;
+  justify-content:center;
+  border-bottom:1px solid var(--border);
+}
 
-    .scroll-indicator {
-      position: absolute;
-      bottom: 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      opacity: 0;
-      animation: fadeUp 1s ease 1s forwards;
-    }
-    .scroll-indicator span {
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      color: var(--text-muted);
-    }
-    .scroll-dot {
-      width: 4px; height: 4px;
-      background: var(--text-muted);
-      border-radius: 50%;
-      animation: dropDown 2s infinite;
-    }
+nav a{
+  padding:1rem 1.5rem;
+  text-decoration:none;
+  color:var(--muted);
+  font-size:0.7rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+}
 
-    @keyframes dropDown {
-      0% { transform: translateY(-10px); opacity: 0; }
-      50% { opacity: 1; }
-      100% { transform: translateY(15px); opacity: 0; }
-    }
+nav a.active, nav a:hover{
+  color:var(--text);
+}
 
-    /* 懸浮導覽列 */
-    nav {
-      position: sticky;
-      top: 20px;
-      display: flex;
-      justify-content: center;
-      z-index: 100;
-      margin-bottom: 2rem;
-    }
-    .nav-container {
-      display: flex;
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border-color);
-      border-radius: 50px;
-      padding: 0.5rem;
-    }
-    nav a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      padding: 0.6rem 1.5rem;
-      border-radius: 30px;
-      transition: all 0.3s ease;
-    }
-    nav a:hover {
-      color: var(--text-main);
-    }
-    nav a.active {
-      background: var(--surface-color);
-      color: var(--text-main);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
+/* PAGE */
+.page{display:none;}
+.page.active{display:block;}
 
-    /* 內容區塊 */
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 4rem 2rem;
-      min-height: 60vh;
-    }
+.wrapper{
+  max-width:700px;
+  margin:auto;
+  padding:4rem 2rem;
+}
 
-    .page { display: none; }
-    .page.active { display: block; animation: fadeIn 0.6s ease forwards; }
+/* HOME */
+.home-text{
+  font-size:1.2rem;
+  margin-bottom:2rem;
+}
 
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      font-style: italic;
-      color: var(--accent);
-      margin-bottom: 3rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .section-title::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, var(--border-color), transparent);
-    }
+.home-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:1px;
+  background:var(--border);
+}
 
-    /* 首頁卡片 */
-    .grid-links {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-    .card {
-      background: var(--surface-color);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 2.5rem 2rem;
-      text-decoration: none;
-      color: var(--text-main);
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.3s ease, border-color 0.3s ease;
-      backdrop-filter: blur(10px);
-    }
-    .card:hover {
-      transform: translateY(-5px);
-      border-color: var(--accent-glow);
-    }
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 50%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
-      transform: skewX(-20deg);
-      transition: left 0.7s ease;
-    }
-    .card:hover::before { left: 150%; }
+.home-card{
+  background:var(--bg);
+  padding:2rem;
+  text-decoration:none;
+  color:var(--text);
+  transition:0.3s;
+}
 
-    .card-id {
-      font-size: 0.7rem;
-      color: var(--accent);
-      margin-bottom: 1rem;
-      letter-spacing: 0.1em;
-    }
-    .card-title {
-      font-size: 1.5rem;
-      font-family: 'Playfair Display', serif;
-      margin-bottom: 0.5rem;
-    }
-    .card-desc {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
+.home-card:hover{
+  background:#111;
+}
 
-    /* 文章列表 */
-    .article-item {
-      margin-bottom: 4rem;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .article-item.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .article-meta {
-      font-size: 0.8rem;
-      color: var(--accent);
-      margin-bottom: 0.8rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-    .article-title {
-      font-size: 2rem;
-      font-family: 'Playfair Display', serif;
-      margin-bottom: 1rem;
-      line-height: 1.3;
-    }
-    .article-content {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-    .article-image {
-      width: 100%;
-      height: 300px;
-      background: var(--surface-color);
-      border-radius: 12px;
-      margin: 1.5rem 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      border: 1px solid var(--border-color);
-    }
+/* POSTS */
+.post{
+  margin-bottom:3rem;
+  border-bottom:1px solid var(--border);
+  padding-bottom:2rem;
+}
 
-    /* 空白狀態 */
-    .empty-state {
-      text-align: center;
-      padding: 5rem 0;
-      border: 1px dashed var(--border-color);
-      border-radius: 16px;
-      background: rgba(30, 41, 59, 0.2);
-    }
-    .empty-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
-      color: var(--text-muted);
-      margin-bottom: 0.5rem;
-    }
+.post-date{
+  font-size:0.7rem;
+  color:var(--muted);
+}
 
-    /* 頁腳 */
-    footer {
-      text-align: center;
-      padding: 3rem 0;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      border-top: 1px solid var(--border-color);
-      margin-top: auto;
-    }
+.post-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.5rem;
+  margin:0.5rem 0;
+}
 
-    /* 動畫 */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+.post-body{
+  font-size:0.9rem;
+  color:#aaa;
+}
 
-    @media (max-width: 600px) {
-      .nav-container { padding: 0.2rem; }
-      nav a { padding: 0.5rem 1rem; font-size: 0.7rem; }
-      .hero-title { font-size: 2.5rem; }
-    }
-  </style>
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:2rem;
+  border-top:1px solid var(--border);
+  font-size:0.7rem;
+  color:var(--muted);
+}
+
+</style>
 </head>
+
 <body>
 
-  <div class="cursor-dot" id="cursorDot"></div>
-  <div class="cursor-outline" id="cursorOutline"></div>
-
-  <div class="bg-orbs">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
+<header>
+  <div>
+    <div class="title">大軍</div>
+    <div class="subtitle">a personal space</div>
   </div>
+</header>
 
-  <header>
-    <div class="hero-subtitle">Xingyu's Space</div>
-    <div class="hero-title">
-      星宇的創意宇宙<br>
-      <span>exploration & thoughts</span>
-    </div>
-    <div class="scroll-indicator">
-      <span>EXPLORE</span>
-      <div class="scroll-dot"></div>
-    </div>
-  </header>
+<nav>
+  <a href="#" class="active" onclick="showPage('home',this)">Home</a>
+  <a href="#" onclick="showPage('daily',this)">Daily</a>
+  <a href="#" onclick="showPage('travel',this)">Travel</a>
+  <a href="#" onclick="showPage('portfolio',this)">Portfolio</a>
+  <a href="#" onclick="showPage('resume',this)">Resume</a>
+</nav>
 
-  <nav>
-    <div class="nav-container">
-      <a href="#" class="active" onclick="switchPage('home', this)">Hub</a>
-      <a href="#" onclick="switchPage('notes', this)">Notes</a>
-      <a href="#" onclick="switchPage('gallery', this)">Gallery</a>
-      <a href="#" onclick="switchPage('works', this)">Works</a>
-    </div>
-  </nav>
-
-  <div class="page active container" id="page-home">
-    <div class="section-title">Welcome.</div>
-    <p style="color: var(--text-muted); margin-bottom: 3rem; max-width: 500px;">
-      這是一個記錄思考、設計與生活碎片的數位庭園。點擊下方板塊探索不同領域的內容。
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <div class="wrapper">
+    <p class="home-text">
+      這裡記錄一些生活、一些想法，還有正在發生的事。
     </p>
-    <div class="grid-links">
-      <a href="#" class="card" onclick="switchPage('notes', document.querySelectorAll('nav a')[1])">
-        <div class="card-id">01 / TEXT</div>
-        <div class="card-title">Notes</div>
-        <div class="card-desc">日常隨筆與技術心得的存放處。</div>
-      </a>
-      <a href="#" class="card" onclick="switchPage('gallery', document.querySelectorAll('nav a')[2])">
-        <div class="card-id">02 / VISUAL</div>
-        <div class="card-title">Gallery</div>
-        <div class="card-desc">攝影、旅行與視覺收集。</div>
-      </a>
-      <a href="#" class="card" onclick="switchPage('works', document.querySelectorAll('nav a')[3])">
-        <div class="card-id">03 / PROJECT</div>
-        <div class="card-title">Works</div>
-        <div class="card-desc">過往的專案與實驗性作品。</div>
-      </a>
+
+    <div class="home-grid">
+      <a class="home-card" href="#" onclick="showPage('daily',document.querySelectorAll('nav a')[1])">Daily</a>
+      <a class="home-card" href="#" onclick="showPage('travel',document.querySelectorAll('nav a')[2])">Travel</a>
+      <a class="home-card" href="#" onclick="showPage('portfolio',document.querySelectorAll('nav a')[3])">Portfolio</a>
+      <a class="home-card" href="#" onclick="showPage('resume',document.querySelectorAll('nav a')[4])">Resume</a>
     </div>
   </div>
+</div>
 
-  <div class="page container" id="page-notes">
-    <div class="section-title">Notes.</div>
-    
-    <article class="article-item">
-      <div class="article-meta">
-        <span>2025.04.28</span>
-        <span>— Design Thinking</span>
-      </div>
-      <h2 class="article-title">重新思考個人網站的意義</h2>
-      <div class="article-content">
-        <p>在社群媒體碎片化的時代，擁有一個屬於自己的數位空間變得越來越珍貴。這不僅僅是履歷的延伸，更是自我對話的過程。</p>
-        <p>這篇文章記錄了我從構思到實作這個深色模式網站的心路歷程，探討了「數位花園」的概念...</p>
-      </div>
-    </article>
+<!-- DAILY -->
+<div id="page-daily" class="page">
+  <div class="wrapper">
 
-    <article class="article-item">
-      <div class="article-meta">
-        <span>2025.03.15</span>
-        <span>— Tech</span>
+    <div class="post">
+      <div class="post-date">Apr 28, 2026</div>
+      <div class="post-title">今天的日常</div>
+      <div class="post-body">
+        今天過得很普通，但還是記一下。
       </div>
-      <h2 class="article-title">關於前端動畫的效能優化</h2>
-      <div class="article-content">
-        <p>使用 CSS transform 和 opacity 來製作動畫，能夠避開瀏覽器的 Layout 和 Paint 階段，將運算交給 GPU，這對於保持 60fps 的滑順度至關重要。</p>
-      </div>
-    </article>
+    </div>
+
   </div>
+</div>
 
-  <div class="page container" id="page-gallery">
-    <div class="section-title">Gallery.</div>
-    <article class="article-item">
-      <h2 class="article-title">冰島環島紀錄</h2>
-      <div class="article-image">IMAGE PLACEHOLDER</div>
-      <div class="article-content">
-        <p>極光、冰川與無盡的公路。那是充滿寂寥卻又無比震撼的兩週。</p>
+<!-- TRAVEL -->
+<div id="page-travel" class="page">
+  <div class="wrapper">
+    <div class="post">
+      <div class="post-date">2026</div>
+      <div class="post-title">旅行紀錄</div>
+      <div class="post-body">
+        之後有去的地方會放在這裡。
       </div>
-    </article>
-  </div>
-
-  <div class="page container" id="page-works">
-    <div class="section-title">Works.</div>
-    <div class="empty-state">
-      <div class="empty-title">Archive Updating...</div>
-      <div style="font-size: 0.85rem;">專案資料正在整理中，即將上線。</div>
     </div>
   </div>
+</div>
 
-  <footer>
-    <p>© 2025 Xingyu. Designed with minimalistic approach.</p>
-  </footer>
+<!-- PORTFOLIO -->
+<div id="page-portfolio" class="page">
+  <div class="wrapper">
+    Coming soon
+  </div>
+</div>
 
-  <script>
-    // 自訂滑鼠邏輯
-    const dot = document.getElementById('cursorDot');
-    const outline = document.getElementById('cursorOutline');
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let outlineX = mouseX;
-    let outlineY = mouseY;
+<!-- RESUME -->
+<div id="page-resume" class="page">
+  <div class="wrapper">
+    Coming soon
+  </div>
+</div>
 
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      // 實心點無延遲跟隨
-      dot.style.left = `${mouseX}px`;
-      dot.style.top = `${mouseY}px`;
-    });
+<footer>
+  © 2026 Dajun
+</footer>
 
-    // 圓圈平滑跟隨動畫 (Lerp)
-    function animateCursor() {
-      let dx = mouseX - outlineX;
-      let dy = mouseY - outlineY;
-      outlineX += dx * 0.15;
-      outlineY += dy * 0.15;
-      outline.style.left = `${outlineX}px`;
-      outline.style.top = `${outlineY}px`;
-      requestAnimationFrame(animateCursor);
-    }
-    animateCursor();
-
-    // 頁面切換邏輯
-    function switchPage(pageId, navElement) {
-      if(event) event.preventDefault();
-      
-      // 移除所有啟動狀態
-      document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-      });
-      document.querySelectorAll('nav a').forEach(link => {
-        link.classList.remove('active');
-      });
-
-      // 啟動目標頁面與選單
-      document.getElementById(`page-${pageId}`).classList.add('active');
-      if(navElement) navElement.classList.add('active');
-
-      // 重新觸發滾動動畫監聽
-      initScrollReveal();
-      
-      // 切換頁面後平滑滾動到內容區
-      if(window.scrollY > window.innerHeight - 100) {
-        document.querySelector('nav').scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-
-    // 滾動浮現動畫 (Intersection Observer)
-    function initScrollReveal() {
-      const items = document.querySelectorAll('.page.active .article-item');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, index) => {
-          if (entry.isIntersecting) {
-            // 加入延遲產生階梯浮現效果
-            setTimeout(() => {
-              entry.target.classList.add('visible');
-            }, index * 100);
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
-
-      items.forEach(item => {
-        item.classList.remove('visible'); // 重置狀態
-        observer.observe(item);
-      });
-    }
-
-    // 初始化首頁動畫
-    initScrollReveal();
-  </script>
+<script>
+function showPage(name, el){
+  event.preventDefault();
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(el) el.classList.add('active');
+}
+</script>
 
 </body>
 </html>
