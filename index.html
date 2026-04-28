@@ -1,213 +1,650 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>大軍的個人網站</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400&family=Outfit:wght@200;300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #050506;
-      --bg2: #0b0b10;
-      --surface: rgba(255,255,255,0.04);
-      --surface-2: rgba(255,255,255,0.07);
-      --border: rgba(255,255,255,0.10);
-      --border-strong: rgba(255,255,255,0.18);
-      --text: #f5f5f7;
-      --muted: #a1a1aa;
-      --muted-2: #6b7280;
-      --accent: #ffffff;
-      --glow: rgba(255,255,255,0.08);
-      --shadow: 0 20px 60px rgba(0,0,0,0.45);
-      --radius-xl: 28px;
-      --radius-lg: 20px;
-      --radius-md: 14px;
+      --bg: #000;
+      --white: #fff;
+      --off-white: #f5f5f7;
+      --muted: #6e6e73;
+      --border: #1d1d1f;
+      --surface: #111;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
+
     body {
-      background:
-        radial-gradient(circle at 20% 10%, rgba(255,255,255,0.08), transparent 20%),
-        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05), transparent 25%),
-        radial-gradient(circle at 50% 100%, rgba(255,255,255,0.06), transparent 30%),
-        linear-gradient(180deg, var(--bg), var(--bg2));
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--off-white);
+      font-family: 'Outfit', sans-serif;
       overflow-x: hidden;
       cursor: none;
-      min-height: 100vh;
     }
 
-    /* subtle grain */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 999;
-      opacity: 0.26;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.35'/%3E%3C/svg%3E");
-      mix-blend-mode: soft-light;
-    }
-
-    /* ambient blobs */
-    .blob {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(100px);
-      opacity: 0.12;
-      z-index: 0;
-      pointer-events: none;
-      animation: float 16s ease-in-out infinite;
-    }
-    .blob.one { width: 420px; height: 420px; top: -120px; left: -80px; background: #fff; }
-    .blob.two { width: 360px; height: 360px; bottom: 10%; right: -80px; background: #8b8b8b; animation-delay: 3s; }
-    .blob.three { width: 280px; height: 280px; top: 45%; left: 55%; background: #d7d7d7; animation-delay: 6s; }
-    @keyframes float {
-      0%,100% { transform: translateY(0) translateX(0) scale(1); }
-      50% { transform: translateY(-28px) translateX(20px) scale(1.07); }
-    }
-
-    /* cursor */
+    /* ── CURSOR ── */
     #cur {
       position: fixed;
-      inset: 0;
       pointer-events: none;
-      z-index: 10000;
+      z-index: 9999;
       mix-blend-mode: difference;
     }
-    #cur .dot, #cur .ring {
-      position: absolute;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-    }
     #cur .dot {
-      width: 10px;
-      height: 10px;
+      width: 10px; height: 10px;
       background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      transform: translate(-50%,-50%);
+      transition: width .3s, height .3s;
     }
     #cur .ring {
-      width: 42px;
-      height: 42px;
-      border: 1px solid rgba(255,255,255,0.45);
-      transition: width .25s ease, height .25s ease, opacity .25s ease;
-      opacity: 0.85;
+      width: 40px; height: 40px;
+      border: 1.5px solid rgba(255,255,255,0.5);
+      border-radius: 50%;
+      position: absolute;
+      transform: translate(-50%,-50%);
+      transition: width .4s cubic-bezier(.23,1,.32,1), height .4s cubic-bezier(.23,1,.32,1);
     }
     body.hovering #cur .dot { width: 14px; height: 14px; }
-    body.hovering #cur .ring { width: 62px; height: 62px; opacity: 0.55; }
+    body.hovering #cur .ring { width: 56px; height: 56px; }
 
-    /* hero */
+    /* ── HERO ── */
     #hero {
-      position: relative;
       height: 100vh;
+      position: relative;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
       overflow: hidden;
-      border-bottom: 1px solid var(--border);
     }
 
-    #stars {
+    /* Star canvas */
+    #stars { position: absolute; inset: 0; z-index: 0; }
+
+    /* Glow orb */
+    .orb {
       position: absolute;
-      inset: 0;
-      z-index: 1;
-      opacity: 0.9;
-    }
-
-    .hero-inner {
-      position: relative;
-      z-index: 2;
-      width: min(920px, calc(100vw - 48px));
-      padding: 2rem;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.7rem;
-      padding: 0.5rem 0.9rem;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.03);
-      border-radius: 999px;
-      color: var(--muted);
-      font-size: 0.68rem;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
-      margin-bottom: 1.8rem;
-      backdrop-filter: blur(18px);
-      box-shadow: var(--shadow);
-      opacity: 0;
-      animation: rise 0.9s ease 0.15s forwards;
-    }
-
-    .eyebrow .dot-small {
-      width: 6px;
-      height: 6px;
       border-radius: 50%;
-      background: #fff;
-      box-shadow: 0 0 18px rgba(255,255,255,0.7);
+      filter: blur(80px);
+      opacity: 0.12;
+      animation: float 8s ease-in-out infinite;
+    }
+    .orb1 { width: 500px; height: 500px; background: #fff; top: -100px; left: -100px; animation-delay: 0s; }
+    .orb2 { width: 300px; height: 300px; background: #aaa; bottom: -50px; right: 10%; animation-delay: 3s; }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-30px) scale(1.05); }
+    }
+
+    .hero-inner { position: relative; z-index: 2; }
+
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: slideUp .8s ease .2s forwards;
     }
 
     .hero-title {
       font-family: 'Noto Serif TC', serif;
-      font-weight: 300;
-      font-size: clamp(3.2rem, 10vw, 7.8rem);
-      line-height: 1.02;
-      letter-spacing: -0.03em;
-      color: var(--text);
-      text-wrap: balance;
+      font-weight: 200;
+      font-size: clamp(3.5rem, 11vw, 8rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--white);
       opacity: 0;
-      animation: rise 1s ease 0.35s forwards;
+      animation: slideUp .9s ease .4s forwards;
     }
 
     .hero-title .sub {
       display: block;
-      margin-top: 0.75rem;
-      font-family: 'Inter', sans-serif;
-      font-size: clamp(0.78rem, 1.8vw, 0.95rem);
-      font-weight: 400;
+      font-size: 0.38em;
+      font-weight: 300;
       color: var(--muted);
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.6rem;
     }
 
-    .hero-copy {
-      max-width: 720px;
-      margin: 1.8rem auto 0;
-      color: #9b9ba4;
-      font-size: 0.95rem;
-      line-height: 2;
+    .hero-cta {
+      margin-top: 3rem;
       opacity: 0;
-      animation: rise 1s ease 0.55s forwards;
+      animation: slideUp .8s ease .8s forwards;
     }
 
-    .hero-actions {
+    .pill-btn {
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: var(--off-white);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.05);
+      transition: background .3s, border-color .3s, transform .3s;
+    }
+    .pill-btn:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.5);
+      transform: scale(1.04);
+    }
+
+    /* scroll indicator */
+    .scroll-ind {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
-      gap: 0.9rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 2.3rem;
-      opacity: 0;
-      animation: rise 1s ease 0.75s forwards;
-    }
-
-    .btn {
-      display: inline-flex;
+      flex-direction: column;
       align-items: center;
       gap: 0.6rem;
-      padding: 0.92rem 1.25rem;
-      border-radius: 999px;
-      text-decoration: none;
-      font-size: 0.82rem;
-      letter-spacing: 0.08em;
-      color: var(--text);
-      border: 1px solid var(--border-strong);
-      background: rgba(255,255,255,0.04);
-      backdrop-filter: blur(18px);
-      transition: transform .25s ease, background .25s ease, border-color .25s ease;
-      box-shadow: var(--shadow);
+      z-index: 2;
+      opacity: 0;
+      animation: slideUp .8s ease 1.2s forwards;
     }
-    .btn:hover {
-      transform
+    .scroll-ind span { font-size: 0.58rem; letter-spacing: 0.25em; color: var(--muted); text-transform: uppercase; }
+    .scroll-ind .bar {
+      width: 1px; height: 36px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+      animation: barPulse 2s ease-in-out infinite;
+    }
+    @keyframes barPulse {
+      0%,100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; justify-content: center;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+    }
+    nav a {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 1rem 1.6rem;
+      border-right: 1px solid var(--border);
+      transition: color .2s;
+      position: relative;
+    }
+    nav a:first-child { border-left: 1px solid var(--border); }
+    nav a.active, nav a:hover { color: var(--white); }
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%; right: 50%;
+      height: 1px;
+      background: var(--white);
+      transition: left .3s ease, right .3s ease;
+    }
+    nav a.active::after, nav a:hover::after { left: 0; right: 0; }
+
+    /* ── PAGE ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .wrapper {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+    }
+
+    /* ── SECTION LABEL ── */
+    .sec-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+    .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* ── HOME CARDS ── */
+    .home-intro {
+      font-family: 'Noto Serif TC', serif;
+      font-weight: 200;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      line-height: 1.45;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+    }
+
+    .home-sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.9;
+      max-width: 420px;
+      margin-bottom: 4rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5px;
+      background: var(--border);
+      border: 1.5px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .card {
+      background: var(--bg);
+      padding: 2.2rem 2rem;
+      text-decoration: none;
+      display: block;
+      position: relative;
+      overflow: hidden;
+      transition: background .4s ease;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.06), transparent 70%);
+      opacity: 0;
+      transition: opacity .4s;
+    }
+    .card:hover::before { opacity: 1; }
+
+    .card-num {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .card-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.35rem;
+      font-weight: 300;
+      color: var(--white);
+      margin-bottom: 0.4rem;
+      transition: letter-spacing .4s ease;
+    }
+    .card:hover .card-title { letter-spacing: 0.03em; }
+    .card-desc { font-size: 0.72rem; color: var(--muted); }
+    .card-arrow {
+      position: absolute;
+      top: 2rem; right: 2rem;
+      font-size: 1.1rem;
+      color: var(--muted);
+      transition: transform .3s ease, color .3s;
+    }
+    .card:hover .card-arrow { transform: translate(4px,-4px); color: var(--white); }
+
+    /* ── POST ── */
+    .post {
+      padding-bottom: 4rem;
+      margin-bottom: 4rem;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .post.visible { opacity: 1; transform: none; }
+    .post:last-child { border-bottom: none; }
+
+    .post-meta {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .post-date { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; }
+    .post-tag {
+      font-size: 0.6rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.1rem 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .post-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.3;
+      margin-bottom: 1.25rem;
+    }
+    .post-img {
+      width: 100%; height: 300px;
+      background: var(--surface);
+      border-radius: 12px;
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      overflow: hidden;
+      position: relative;
+    }
+    .post-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03), transparent);
+      border-radius: 12px;
+    }
+    .post-body { font-size: 0.88rem; color: #888; line-height: 2; }
+    .post-body p { margin-bottom: 0.8rem; }
+
+    /* ── PLACEHOLDER ── */
+    .placeholder {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 6rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.03), transparent 70%);
+    }
+    .placeholder h3 {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 2.2rem;
+      font-weight: 200;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    .placeholder p { font-size: 0.75rem; color: #2a2a2a; letter-spacing: 0.08em; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card { animation: slideUp .5s ease both; }
+    .card:nth-child(1) { animation-delay: .05s; }
+    .card:nth-child(2) { animation-delay: .12s; }
+    .card:nth-child(3) { animation-delay: .19s; }
+    .card:nth-child(4) { animation-delay: .26s; }
+
+    @media (max-width: 520px) {
+      .card-grid { grid-template-columns: 1fr; }
+      nav a { padding: .9rem 1rem; font-size: .6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div id="cur"><div class="dot"></div><div class="ring"></div></div>
+
+  <!-- Hero -->
+  <section id="hero">
+    <canvas id="stars"></canvas>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="hero-inner">
+      <div class="hero-eyebrow">dajcxun.com &nbsp;·&nbsp; est. 2025</div>
+      <h1 class="hero-title">
+        大軍的個人網站
+        <span class="sub">a personal space on the internet</span>
+      </h1>
+      <div class="hero-cta">
+        <a href="#nav" class="pill-btn" onclick="scrollToNav()">Explore ↓</a>
+      </div>
+    </div>
+    <div class="scroll-ind">
+      <span>Scroll</span>
+      <div class="bar"></div>
+    </div>
+  </section>
+
+  <!-- Nav -->
+  <nav id="nav">
+    <a href="#" class="active" onclick="show('home',this)">Home</a>
+    <a href="#" onclick="show('daily',this)">Daily</a>
+    <a href="#" onclick="show('travel',this)">Travel</a>
+    <a href="#" onclick="show('portfolio',this)">Portfolio</a>
+    <a href="#" onclick="show('resume',this)">Resume</a>
+  </nav>
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="wrapper">
+      <div class="sec-label">Home</div>
+      <div class="home-intro">我是大軍！<br>歡迎來到我的個人網站</div>
+      <p class="home-sub">This is where I keep my daily thoughts, travel memories, and everything in between. Have a look around.</p>
+      <div class="card-grid">
+        <a class="card" href="#" onclick="show('daily', document.querySelectorAll('nav a')[1])">
+          <div class="card-num">01</div>
+          <div class="card-title">Daily</div>
+          <div class="card-desc">Everyday moments</div>
+          <span class="card-arrow">↗</span>
+        </a>
+        <a class="card" href="#" onclick="show('travel', document.querySelectorAll('nav a')[2])">
+          <div class="card-num">02</div>
+          <div class="card-title">Travel</div>
+          <div class="card-desc">Places I've been</div>
+          <span class="card-arrow">↗</span>
+        </a>
+        <a class="card" href="#" onclick="show('portfolio', document.querySelectorAll('nav a')[3])">
+          <div class="card-num">03</div>
+          <div class="card-title">Portfolio</div>
+          <div class="card-desc">Work & projects</div>
+          <span class="card-arrow">↗</span>
+        </a>
+        <a class="card" href="#" onclick="show('resume', document.querySelectorAll('nav a')[4])">
+          <div class="card-num">04</div>
+          <div class="card-title">Resume</div>
+          <div class="card-desc">My background</div>
+          <span class="card-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAILY -->
+  <div class="page" id="page-daily">
+    <div class="wrapper">
+      <div class="sec-label">Daily</div>
+      <article class="post">
+        <div class="post-meta">
+          <span class="post-date">Apr 27, 2025</span>
+          <span class="post-tag">Daily</span>
+        </div>
+        <h2 class="post-title">Your first post title goes here</h2>
+        <div class="post-img">Photo</div>
+        <div class="post-body">
+          <p>Write whatever you want here — what happened today, a random thought, something you ate, something you saw.</p>
+          <p>This is your space.</p>
+        </div>
+      </article>
+      <article class="post">
+        <div class="post-meta">
+          <span class="post-date">Apr 20, 2025</span>
+          <span class="post-tag">Daily</span>
+        </div>
+        <h2 class="post-title">Second post title</h2>
+        <div class="post-body">
+          <p>Add more posts by duplicating the article block in the HTML file on GitHub.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- TRAVEL -->
+  <div class="page" id="page-travel">
+    <div class="wrapper">
+      <div class="sec-label">Travel</div>
+      <article class="post">
+        <div class="post-meta">
+          <span class="post-date">Mar 2025</span>
+          <span class="post-tag">Travel</span>
+        </div>
+        <h2 class="post-title">Your first travel entry</h2>
+        <div class="post-img">Photo</div>
+        <div class="post-body">
+          <p>Where did you go? What did you see? Write it down here.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- PORTFOLIO -->
+  <div class="page" id="page-portfolio">
+    <div class="wrapper">
+      <div class="sec-label">Portfolio</div>
+      <div class="placeholder">
+        <h3>Coming Soon</h3>
+        <p>Projects and work will be added here.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUME -->
+  <div class="page" id="page-resume">
+    <div class="wrapper">
+      <div class="sec-label">Resume</div>
+      <div class="placeholder">
+        <h3>Coming Soon</h3>
+        <p>Resume will be uploaded here.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>© 2025 Dajun &nbsp;·&nbsp; Built with GitHub Pages</footer>
+
+  <script>
+    /* ── Stars ── */
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function initStars() {
+      stars = [];
+      for (let i = 0; i < 220; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.2 + 0.2,
+          a: Math.random(),
+          speed: Math.random() * 0.004 + 0.002,
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+    }
+
+    function drawStars(t) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(s => {
+        const alpha = 0.3 + 0.7 * Math.abs(Math.sin(t * s.speed + s.phase));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${alpha * 0.8})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(drawStars);
+    }
+
+    resize();
+    initStars();
+    requestAnimationFrame(drawStars);
+    window.addEventListener('resize', () => { resize(); initStars(); });
+
+    /* ── Cursor ── */
+    const cur = document.getElementById('cur');
+    const dot = cur.querySelector('.dot');
+    const ring = cur.querySelector('.ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.left = mx + 'px';
+      dot.style.top = my + 'px';
+    });
+
+    (function animRing() {
+      rx += (mx - rx) * 0.1;
+      ry += (my - ry) * 0.1;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animRing);
+    })();
+
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    });
+
+    /* ── Card radial glow ── */
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        const x = ((e.clientX - r.left) / r.width * 100).toFixed(1);
+        const y = ((e.clientY - r.top) / r.height * 100).toFixed(1);
+        card.style.setProperty('--mx', x + '%');
+        card.style.setProperty('--my', y + '%');
+      });
+    });
+
+    /* ── Page switch ── */
+    function show(name, el) {
+      event.preventDefault();
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+      document.getElementById('page-' + name).classList.add('active');
+      if (el) el.classList.add('active');
+      window.scrollTo({ top: document.getElementById('nav').offsetTop, behavior: 'smooth' });
+      setTimeout(revealPosts, 100);
+    }
+
+    /* ── Scroll reveal ── */
+    function revealPosts() {
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 130);
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.post:not(.visible)').forEach(p => obs.observe(p));
+    }
+    revealPosts();
+
+    function scrollToNav() {
+      event.preventDefault();
+      document.getElementById('nav').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
