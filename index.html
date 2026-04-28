@@ -1,394 +1,535 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dajun's Personal Site</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <title>星軌 - 個人宇宙</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;500&family=Playfair+Display:ital@0;1&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0a0a;
-      --surface: #111;
-      --border: #222;
-      --text: #e8e8e8;
-      --muted: #555;
-      --white: #fff;
+      --bg-color: #0b1121;
+      --surface-color: rgba(30, 41, 59, 0.5);
+      --border-color: rgba(148, 163, 184, 0.15);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.4);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Space Grotesk', 'Noto Serif TC', sans-serif;
       line-height: 1.8;
+      overflow-x: hidden;
+      cursor: none; /* 隱藏預設游標 */
     }
 
-    /* HEADER */
+    /* 動態光暈背景 */
+    .bg-orbs {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: float 20s infinite ease-in-out alternate;
+    }
+    .orb-1 {
+      width: 40vw; height: 40vw;
+      background: radial-gradient(circle, #1e3a8a, transparent 70%);
+      top: -10%; left: -10%;
+    }
+    .orb-2 {
+      width: 30vw; height: 30vw;
+      background: radial-gradient(circle, #065f46, transparent 70%);
+      bottom: -10%; right: -5%;
+      animation-delay: -5s;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(50px, 50px) scale(1.1); }
+    }
+
+    /* 自訂游標 */
+    .cursor-dot {
+      position: fixed;
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+    .cursor-outline {
+      position: fixed;
+      width: 40px; height: 40px;
+      border: 1px solid var(--accent-glow);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background-color 0.2s;
+    }
+    body:has(a:hover) .cursor-outline,
+    body:has(button:hover) .cursor-outline {
+      width: 60px; height: 60px;
+      background-color: rgba(56, 189, 248, 0.1);
+      border-color: var(--accent);
+    }
+
+    /* 頂部 Header */
     header {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
-      padding: 6rem 2rem 4rem;
-      border-bottom: 1px solid var(--border);
+      position: relative;
     }
 
-    .site-title {
-      font-family: 'Noto Serif TC', serif;
-      font-size: clamp(2rem, 6vw, 3.5rem);
-      font-weight: 300;
-      color: var(--white);
-      line-height: 1.3;
-      margin-bottom: 1rem;
-    }
-
-    .site-subtitle {
-      font-size: 0.78rem;
-      color: var(--muted);
-      letter-spacing: 0.2em;
+    .hero-subtitle {
+      font-size: 0.8rem;
+      color: var(--accent);
+      letter-spacing: 0.4em;
       text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.2s forwards;
     }
 
-    /* NAV */
+    .hero-title {
+      font-family: 'Playfair Display', 'Noto Serif TC', serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 500;
+      line-height: 1.2;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.4s forwards;
+    }
+    .hero-title span {
+      font-style: italic;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      animation: fadeUp 1s ease 1s forwards;
+    }
+    .scroll-indicator span {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+    }
+    .scroll-dot {
+      width: 4px; height: 4px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      animation: dropDown 2s infinite;
+    }
+
+    @keyframes dropDown {
+      0% { transform: translateY(-10px); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(15px); opacity: 0; }
+    }
+
+    /* 懸浮導覽列 */
     nav {
+      position: sticky;
+      top: 20px;
       display: flex;
       justify-content: center;
-      gap: 0;
-      border-bottom: 1px solid var(--border);
-      overflow-x: auto;
+      z-index: 100;
+      margin-bottom: 2rem;
     }
-
+    .nav-container {
+      display: flex;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 50px;
+      padding: 0.5rem;
+    }
     nav a {
-      font-size: 0.75rem;
-      color: var(--muted);
+      color: var(--text-muted);
       text-decoration: none;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 1.1rem 1.75rem;
-      border-right: 1px solid var(--border);
-      transition: all 0.2s;
-      white-space: nowrap;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      padding: 0.6rem 1.5rem;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
+    nav a:hover {
+      color: var(--text-main);
+    }
+    nav a.active {
+      background: var(--surface-color);
+      color: var(--text-main);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    nav a:first-child { border-left: 1px solid var(--border); }
-    nav a:hover { color: var(--white); background: var(--surface); }
-    nav a.active { color: var(--white); }
-
-    /* WRAPPER */
-    .wrapper {
-      max-width: 700px;
+    /* 內容區塊 */
+    .container {
+      max-width: 800px;
       margin: 0 auto;
-      padding: 5rem 2rem;
+      padding: 4rem 2rem;
+      min-height: 60vh;
     }
 
-    /* SECTION LABEL */
-    .section-label {
-      font-size: 0.7rem;
-      color: var(--muted);
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
+    .page { display: none; }
+    .page.active { display: block; animation: fadeIn 0.6s ease forwards; }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-style: italic;
+      color: var(--accent);
       margin-bottom: 3rem;
       display: flex;
       align-items: center;
       gap: 1rem;
     }
-
-    .section-label::after {
+    .section-title::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: var(--border);
+      background: linear-gradient(90deg, var(--border-color), transparent);
     }
 
-    /* HOME PAGE */
-    .home-greeting {
-      font-family: 'Instrument Serif', serif;
-      font-size: clamp(1.8rem, 5vw, 2.8rem);
-      font-weight: 400;
-      color: var(--white);
-      line-height: 1.4;
-      margin-bottom: 1.5rem;
-    }
-
-    .home-greeting em {
-      font-style: italic;
-      color: var(--muted);
-    }
-
-    .home-desc {
-      font-size: 0.9rem;
-      color: #666;
-      line-height: 1.9;
-      max-width: 480px;
-      margin-bottom: 3rem;
-    }
-
-    .home-links {
+    /* 首頁卡片 */
+    .grid-links {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
     }
-
-    .home-link {
-      background: var(--bg);
-      padding: 1.75rem;
-      cursor: pointer;
-      transition: background 0.2s;
+    .card {
+      background: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
       text-decoration: none;
-      display: block;
+      color: var(--text-main);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+      backdrop-filter: blur(10px);
     }
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-glow);
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.7s ease;
+    }
+    .card:hover::before { left: 150%; }
 
-    .home-link:hover { background: var(--surface); }
-
-    .home-link-title {
+    .card-id {
       font-size: 0.7rem;
-      color: var(--muted);
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-bottom: 0.4rem;
-    }
-
-    .home-link-desc {
-      font-family: 'Instrument Serif', serif;
-      font-size: 1.1rem;
-      color: var(--white);
-    }
-
-    /* POST */
-    .post {
-      margin-bottom: 4rem;
-      padding-bottom: 4rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .post:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    .post-meta {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .post-date {
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-    }
-
-    .post-tag {
-      font-size: 0.65rem;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 0.1rem 0.6rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    .post-title {
-      font-family: 'Instrument Serif', serif;
-      font-size: 1.6rem;
-      font-weight: 400;
-      color: var(--white);
-      line-height: 1.35;
+      color: var(--accent);
       margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+    .card-title {
+      font-size: 1.5rem;
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 0.5rem;
+    }
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
     }
 
-    .post-body {
-      font-size: 0.92rem;
-      color: #888;
-      line-height: 1.9;
+    /* 文章列表 */
+    .article-item {
+      margin-bottom: 4rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
-
-    .post-body p { margin-bottom: 0.8rem; }
-
-    .post-img {
+    .article-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .article-meta {
+      font-size: 0.8rem;
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .article-title {
+      font-size: 2rem;
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+    .article-content {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .article-image {
       width: 100%;
-      height: 260px;
-      background: var(--surface);
-      border: 1px solid var(--border);
+      height: 300px;
+      background: var(--surface-color);
+      border-radius: 12px;
       margin: 1.5rem 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--muted);
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
     }
 
-    /* PLACEHOLDER */
-    .placeholder {
-      border: 1px dashed var(--border);
-      padding: 4rem 2rem;
+    /* 空白狀態 */
+    .empty-state {
       text-align: center;
+      padding: 5rem 0;
+      border: 1px dashed var(--border-color);
+      border-radius: 16px;
+      background: rgba(30, 41, 59, 0.2);
+    }
+    .empty-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
     }
 
-    .placeholder-title {
-      font-family: 'Instrument Serif', serif;
-      font-size: 1.4rem;
-      color: var(--muted);
-      margin-bottom: 0.75rem;
-    }
-
-    .placeholder-desc {
-      font-size: 0.8rem;
-      color: #333;
-      letter-spacing: 0.05em;
-    }
-
-    /* PAGE */
-    .page { display: none; }
-    .page.active { display: block; }
-
-    /* FOOTER */
+    /* 頁腳 */
     footer {
       text-align: center;
-      padding: 3rem 2rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
+      padding: 3rem 0;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border-color);
+      margin-top: auto;
     }
 
-    @media (max-width: 480px) {
-      .home-links { grid-template-columns: 1fr; }
-      nav a { padding: 1rem 1.25rem; }
+    /* 動畫 */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 600px) {
+      .nav-container { padding: 0.2rem; }
+      nav a { padding: 0.5rem 1rem; font-size: 0.7rem; }
+      .hero-title { font-size: 2.5rem; }
     }
   </style>
 </head>
 <body>
 
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-outline" id="cursorOutline"></div>
+
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
   <header>
-    <div class="site-title">大軍的個人網站</div>
-    <div class="site-subtitle">dajcxun.com</div>
+    <div class="hero-subtitle">Xingyu's Space</div>
+    <div class="hero-title">
+      星宇的創意宇宙<br>
+      <span>exploration & thoughts</span>
+    </div>
+    <div class="scroll-indicator">
+      <span>EXPLORE</span>
+      <div class="scroll-dot"></div>
+    </div>
   </header>
 
   <nav>
-    <a href="#" class="active" onclick="showPage('home', this)">Home</a>
-    <a href="#" onclick="showPage('daily', this)">Daily</a>
-    <a href="#" onclick="showPage('travel', this)">Travel</a>
-    <a href="#" onclick="showPage('portfolio', this)">Portfolio</a>
-    <a href="#" onclick="showPage('resume', this)">Resume</a>
+    <div class="nav-container">
+      <a href="#" class="active" onclick="switchPage('home', this)">Hub</a>
+      <a href="#" onclick="switchPage('notes', this)">Notes</a>
+      <a href="#" onclick="switchPage('gallery', this)">Gallery</a>
+      <a href="#" onclick="switchPage('works', this)">Works</a>
+    </div>
   </nav>
 
-  <!-- HOME -->
-  <div class="page active" id="page-home">
-    <div class="wrapper">
-      <div class="section-label">Home</div>
-      <div class="home-greeting">我是大軍！<br>歡迎來到我的個人網站</div>
-      <p class="home-desc">這裡是我記錄人生的地方，正在建立中......</p>
-      <div class="home-links">
-        <a class="home-link" href="#" onclick="showPage('daily', document.querySelectorAll('nav a')[1])">
-          <div class="home-link-title">Daily</div>
-          <div class="home-link-desc">Everyday moments</div>
-        </a>
-        <a class="home-link" href="#" onclick="showPage('travel', document.querySelectorAll('nav a')[2])">
-          <div class="home-link-title">Travel</div>
-          <div class="home-link-desc">Places I've been</div>
-        </a>
-        <a class="home-link" href="#" onclick="showPage('portfolio', document.querySelectorAll('nav a')[3])">
-          <div class="home-link-title">Portfolio</div>
-          <div class="home-link-desc">Work & projects</div>
-        </a>
-        <a class="home-link" href="#" onclick="showPage('resume', document.querySelectorAll('nav a')[4])">
-          <div class="home-link-title">Resume</div>
-          <div class="home-link-desc">My background</div>
-        </a>
+  <div class="page active container" id="page-home">
+    <div class="section-title">Welcome.</div>
+    <p style="color: var(--text-muted); margin-bottom: 3rem; max-width: 500px;">
+      這是一個記錄思考、設計與生活碎片的數位庭園。點擊下方板塊探索不同領域的內容。
+    </p>
+    <div class="grid-links">
+      <a href="#" class="card" onclick="switchPage('notes', document.querySelectorAll('nav a')[1])">
+        <div class="card-id">01 / TEXT</div>
+        <div class="card-title">Notes</div>
+        <div class="card-desc">日常隨筆與技術心得的存放處。</div>
+      </a>
+      <a href="#" class="card" onclick="switchPage('gallery', document.querySelectorAll('nav a')[2])">
+        <div class="card-id">02 / VISUAL</div>
+        <div class="card-title">Gallery</div>
+        <div class="card-desc">攝影、旅行與視覺收集。</div>
+      </a>
+      <a href="#" class="card" onclick="switchPage('works', document.querySelectorAll('nav a')[3])">
+        <div class="card-id">03 / PROJECT</div>
+        <div class="card-title">Works</div>
+        <div class="card-desc">過往的專案與實驗性作品。</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="page container" id="page-notes">
+    <div class="section-title">Notes.</div>
+    
+    <article class="article-item">
+      <div class="article-meta">
+        <span>2025.04.28</span>
+        <span>— Design Thinking</span>
       </div>
-    </div>
-  </div>
-
-  <!-- DAILY -->
-  <div class="page" id="page-daily">
-    <div class="wrapper">
-      <div class="section-label">Daily</div>
-
-      <article class="post">
-        <div class="post-meta">
-          <span class="post-date">Apr 27, 2025</span>
-          <span class="post-tag">Daily</span>
-        </div>
-        <h2 class="post-title">Your first post title goes here</h2>
-        <div class="post-img">Photo</div>
-        <div class="post-body">
-          <p>Write whatever you want here — what happened today, a random thought, something you ate, something you saw.</p>
-          <p>This is your space.</p>
-        </div>
-      </article>
-
-      <article class="post">
-        <div class="post-meta">
-          <span class="post-date">Apr 20, 2025</span>
-          <span class="post-tag">Daily</span>
-        </div>
-        <h2 class="post-title">Second post title</h2>
-        <div class="post-body">
-          <p>Add more posts by duplicating the article block in the HTML file on GitHub.</p>
-        </div>
-      </article>
-
-    </div>
-  </div>
-
-  <!-- TRAVEL -->
-  <div class="page" id="page-travel">
-    <div class="wrapper">
-      <div class="section-label">Travel</div>
-
-      <article class="post">
-        <div class="post-meta">
-          <span class="post-date">Mar 2025</span>
-          <span class="post-tag">Travel</span>
-        </div>
-        <h2 class="post-title">Your first travel entry</h2>
-        <div class="post-img">Photo</div>
-        <div class="post-body">
-          <p>Where did you go? What did you see? Write it down here.</p>
-        </div>
-      </article>
-
-    </div>
-  </div>
-
-  <!-- PORTFOLIO -->
-  <div class="page" id="page-portfolio">
-    <div class="wrapper">
-      <div class="section-label">Portfolio</div>
-      <div class="placeholder">
-        <div class="placeholder-title">Coming Soon</div>
-        <div class="placeholder-desc">Projects and work will be added here.</div>
+      <h2 class="article-title">重新思考個人網站的意義</h2>
+      <div class="article-content">
+        <p>在社群媒體碎片化的時代，擁有一個屬於自己的數位空間變得越來越珍貴。這不僅僅是履歷的延伸，更是自我對話的過程。</p>
+        <p>這篇文章記錄了我從構思到實作這個深色模式網站的心路歷程，探討了「數位花園」的概念...</p>
       </div>
-    </div>
+    </article>
+
+    <article class="article-item">
+      <div class="article-meta">
+        <span>2025.03.15</span>
+        <span>— Tech</span>
+      </div>
+      <h2 class="article-title">關於前端動畫的效能優化</h2>
+      <div class="article-content">
+        <p>使用 CSS transform 和 opacity 來製作動畫，能夠避開瀏覽器的 Layout 和 Paint 階段，將運算交給 GPU，這對於保持 60fps 的滑順度至關重要。</p>
+      </div>
+    </article>
   </div>
 
-  <!-- RESUME -->
-  <div class="page" id="page-resume">
-    <div class="wrapper">
-      <div class="section-label">Resume</div>
-      <div class="placeholder">
-        <div class="placeholder-title">Coming Soon</div>
-        <div class="placeholder-desc">Resume will be uploaded here.</div>
+  <div class="page container" id="page-gallery">
+    <div class="section-title">Gallery.</div>
+    <article class="article-item">
+      <h2 class="article-title">冰島環島紀錄</h2>
+      <div class="article-image">IMAGE PLACEHOLDER</div>
+      <div class="article-content">
+        <p>極光、冰川與無盡的公路。那是充滿寂寥卻又無比震撼的兩週。</p>
       </div>
+    </article>
+  </div>
+
+  <div class="page container" id="page-works">
+    <div class="section-title">Works.</div>
+    <div class="empty-state">
+      <div class="empty-title">Archive Updating...</div>
+      <div style="font-size: 0.85rem;">專案資料正在整理中，即將上線。</div>
     </div>
   </div>
 
   <footer>
-    © 2025 Dajun · Built with GitHub Pages
+    <p>© 2025 Xingyu. Designed with minimalistic approach.</p>
   </footer>
 
   <script>
-    function showPage(name, el) {
-      event.preventDefault();
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-      document.getElementById('page-' + name).classList.add('active');
-      if (el) el.classList.add('active');
+    // 自訂滑鼠邏輯
+    const dot = document.getElementById('cursorDot');
+    const outline = document.getElementById('cursorOutline');
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let outlineX = mouseX;
+    let outlineY = mouseY;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      // 實心點無延遲跟隨
+      dot.style.left = `${mouseX}px`;
+      dot.style.top = `${mouseY}px`;
+    });
+
+    // 圓圈平滑跟隨動畫 (Lerp)
+    function animateCursor() {
+      let dx = mouseX - outlineX;
+      let dy = mouseY - outlineY;
+      outlineX += dx * 0.15;
+      outlineY += dy * 0.15;
+      outline.style.left = `${outlineX}px`;
+      outline.style.top = `${outlineY}px`;
+      requestAnimationFrame(animateCursor);
     }
+    animateCursor();
+
+    // 頁面切換邏輯
+    function switchPage(pageId, navElement) {
+      if(event) event.preventDefault();
+      
+      // 移除所有啟動狀態
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      document.querySelectorAll('nav a').forEach(link => {
+        link.classList.remove('active');
+      });
+
+      // 啟動目標頁面與選單
+      document.getElementById(`page-${pageId}`).classList.add('active');
+      if(navElement) navElement.classList.add('active');
+
+      // 重新觸發滾動動畫監聽
+      initScrollReveal();
+      
+      // 切換頁面後平滑滾動到內容區
+      if(window.scrollY > window.innerHeight - 100) {
+        document.querySelector('nav').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // 滾動浮現動畫 (Intersection Observer)
+    function initScrollReveal() {
+      const items = document.querySelectorAll('.page.active .article-item');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            // 加入延遲產生階梯浮現效果
+            setTimeout(() => {
+              entry.target.classList.add('visible');
+            }, index * 100);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+      items.forEach(item => {
+        item.classList.remove('visible'); // 重置狀態
+        observer.observe(item);
+      });
+    }
+
+    // 初始化首頁動畫
+    initScrollReveal();
   </script>
 
 </body>
