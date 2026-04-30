@@ -155,7 +155,7 @@ body::before {
   transition-delay: var(--reveal-delay, 0ms);
 }
 [data-reveal].is-in { opacity: 1; transform: none; }
-[data-split] .word { display: inline-block; overflow: hidden; }
+[data-split] .word { display: inline-block; overflow: hidden; padding-bottom: .18em; margin-bottom: -.18em; }
 [data-split] .word > span {
   display: inline-block; opacity: 0; transform: translateY(105%);
   transition: opacity .5s var(--ease-out), transform .5s var(--ease-out);
@@ -588,10 +588,7 @@ body::before {
     <!-- ═══════════════════════════════════ DAILY ══════════════════════════════════ -->
     <div id="page-daily" class="page-view">
       <div class="page-hero">
-        <span class="page-hero__num">— 01</span>
         <h1 class="page-hero__title" data-split>Daily</h1>
-        <span class="page-hero__title-en">Day by Day</span>
-        <p class="page-hero__lede" data-reveal>Small moments, collected carefully.</p>
       </div>
       <div class="coming-soon" data-reveal>
         <span class="coming-soon__tag">— Coming Soon —</span>
@@ -610,10 +607,7 @@ body::before {
     <!-- ═══════════════════════════════════ TRIPS ══════════════════════════════════ -->
     <div id="page-trips" class="page-view">
       <div class="page-hero">
-        <span class="page-hero__num">— 02</span>
         <h1 class="page-hero__title" data-split>Trips</h1>
-        <span class="page-hero__title-en">Places &amp; Distances</span>
-        <p class="page-hero__lede" data-reveal>Coordinates you can look up. Everything else, you have to be there.</p>
       </div>
       <div class="coming-soon" data-reveal>
         <span class="coming-soon__tag">— Coming Soon —</span>
@@ -632,10 +626,7 @@ body::before {
     <!-- ═══════════════════════════════════ WORK ═══════════════════════════════════ -->
     <div id="page-work" class="page-view">
       <div class="page-hero">
-        <span class="page-hero__num">— 03</span>
         <h1 class="page-hero__title" data-split>Work</h1>
-        <span class="page-hero__title-en">Selected Projects</span>
-        <p class="page-hero__lede" data-reveal>Things built alone, or with people I trust.</p>
       </div>
       <div class="coming-soon" data-reveal>
         <span class="coming-soon__tag">— Coming Soon —</span>
@@ -654,10 +645,7 @@ body::before {
     <!-- ═══════════════════════════════════ JOIN ═══════════════════════════════════ -->
     <div id="page-join" class="page-view">
       <div class="page-hero">
-        <span class="page-hero__num">— 04</span>
         <h1 class="page-hero__title" data-split>Join</h1>
-        <span class="page-hero__title-en">Stay in the Loop</span>
-        <p class="page-hero__lede" data-reveal>Infrequent. No ads. Just a note when something new arrives.</p>
       </div>
       <section class="section--join">
         <div class="join">
