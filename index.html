@@ -837,6 +837,25 @@ body::before {
 }
 .contact-icons__item:hover::after { opacity: 1; bottom: -22px; }
 
+/* ░░░ SPA PAGE VIEWS ░░░ */
+.page-view {
+  display: none;
+  min-height: 100vh;
+}
+.page-view.is-active {
+  display: block;
+}
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+.page-view.is-active > * {
+  animation: pageIn .52s var(--ease-out) both;
+}
+.page-view.is-active > *:nth-child(2) { animation-delay: .06s; }
+.page-view.is-active > *:nth-child(3) { animation-delay: .10s; }
+.page-view.is-active > *:nth-child(4) { animation-delay: .14s; }
+
 /* ░░░ COMPACT JOIN (homepage) ░░░ */
 .home-join {
   padding: clamp(40px, 6vh, 64px) var(--pad-x);
@@ -947,6 +966,11 @@ body::before {
 }
 @media (max-width: 600px) { .footer__row { flex-direction: column; gap: 8px; align-items: flex-start; } }
 
+/* ░░░ SPA PAGE VIEWS ░░░ */
+.page-view { display: none; }
+.page-view.is-active { display: block; animation: pgIn .45s var(--ease-out) both; }
+@keyframes pgIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
 /* ░░░ REVEAL / SPLIT ░░░ */
 [data-reveal] {
   opacity: 0;
@@ -1016,16 +1040,16 @@ body::before {
 </head>
 <body>
   <header class="nav" data-nav>
-    <a href="index.html" class="nav__brand" aria-label="Home">
+    <a href="#home" class="nav__brand" aria-label="Home">
       <span class="nav__brand-mark" aria-hidden="true">江</span>
       <span class="nav__brand-text">大軍</span>
     </a>
     <nav class="nav__links" aria-label="Primary">
-      <a href="daily.html">Daily</a>
-      <a href="trips.html">Trips</a>
-      <a href="work.html">Work</a>
-      <a href="join.html">Join</a>
-      <a href="#contact">Contact</a>
+      <a href="#daily">日常</a>
+      <a href="#trips">出遊</a>
+      <a href="#work">作品集</a>
+      <a href="#join">加入</a>
+      <a href="#contact">聯絡</a>
     </nav>
     <button class="nav__menu" aria-label="Open menu" data-menu>
       <span></span><span></span>
@@ -1033,165 +1057,450 @@ body::before {
   </header>
 
   <div class="sheet" data-sheet aria-hidden="true">
-    <a href="daily.html">Daily</a>
-    <a href="trips.html">Trips</a>
-    <a href="work.html">Work</a>
-    <a href="join.html">Join</a>
-    <a href="#contact">Contact</a>
+    <a href="#daily">日常</a>
+    <a href="#trips">出遊</a>
+    <a href="#work">作品集</a>
+    <a href="#join">加入</a>
+    <a href="#contact">聯絡</a>
   </div>
 
   <main>
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero__bg" data-parallax>
-        <img src="assets/sample-1.png" alt="" />
-        <div class="hero__veil"></div>
-      </div>
-      <div class="hero__content">
-        <p class="hero__eyebrow" data-reveal>The Personal Site of</p>
-        <h1 class="hero__title" data-split>大軍的個人網站</h1>
-        <p class="hero__sub" data-reveal>A quiet record of days, journeys, and the work I make.</p>
-      </div>
-      <div class="hero__scrollcue" aria-hidden="true">
-        <span>SCROLL</span>
-        <span class="hero__scrollcue-line"></span>
-      </div>
-    </section>
 
-    <!-- INTRO -->
-    <section class="intro">
-      <span class="intro__eyebrow" data-reveal>ABOUT</span>
-      <p class="intro__text" data-reveal>
-        I'm Da Jun. <em>This is where I keep proof of a life made on purpose —</em> the morning coffee, the cities I've walked, the things I've made. <em>Take your time.</em>
-      </p>
-    </section>
+    <!-- ═══════════════════════════════════ HOME ═══════════════════════════════════ -->
+    <div id="page-home" class="page-view">
 
-    <!-- SUMMARY CARDS -->
-    <section class="summary">
-      <a class="summary__card" href="daily.html" data-reveal>
-        <img class="summary__img" src="assets/sample-1.png" alt="" />
-        <div class="summary__shade"></div>
-        <div class="summary__body">
-          <span class="summary__num">01</span>
-          <h2 class="summary__title">Daily Life
-            
-          </h2>
-          <p class="summary__desc">Small fragments. Light, coffee, the ordinary kept on purpose.</p>
-          <span class="summary__cta">Enter →</span>
+      <section class="hero">
+        <div class="hero__bg" data-parallax>
+          <img src="assets/sample-1.png" alt="" />
+          <div class="hero__veil"></div>
         </div>
-      </a>
-
-      <a class="summary__card" href="trips.html" data-reveal>
-        <img class="summary__img" src="assets/sample-2.png" alt="" />
-        <div class="summary__shade"></div>
-        <div class="summary__body">
-          <span class="summary__num">02</span>
-          <h2 class="summary__title">Trips
-            
-          </h2>
-          <p class="summary__desc">Coordinates, weather, and the things that stayed with me.</p>
-          <span class="summary__cta">Enter →</span>
+        <div class="hero__content">
+          <p class="hero__eyebrow" data-reveal>The Personal Site of</p>
+          <h1 class="hero__title" data-split>大軍的個人網站</h1>
+          <p class="hero__sub" data-reveal>A quiet record of days, journeys, and the work I make.</p>
         </div>
-      </a>
-
-      <a class="summary__card" href="work.html" data-reveal>
-        <img class="summary__img" src="assets/sample-1.png" alt="" />
-        <div class="summary__shade"></div>
-        <div class="summary__body">
-          <span class="summary__num">03</span>
-          <h2 class="summary__title">Selected Work
-            
-          </h2>
-          <p class="summary__desc">Things made alone, or with people I trust.</p>
-          <span class="summary__cta">Enter →</span>
+        <div class="hero__scrollcue" aria-hidden="true">
+          <span>SCROLL</span>
+          <span class="hero__scrollcue-line"></span>
         </div>
-      </a>
-    </section>
+      </section>
 
-    <!-- COMPACT JOIN (homepage) -->
-    <section class="home-join">
-      <div class="home-join__inner">
-        <div class="home-join__text">
-          <p class="home-join__label">Newsletter</p>
-          <p class="home-join__desc">偶爾寄出。不打擾。</p>
-        </div>
-        <form class="home-join__form" data-join-form>
-          <div class="home-join__fields">
-            <input type="text" name="name" placeholder="你的名字" autocomplete="given-name" />
-            <input type="email" name="email" placeholder="Email" autocomplete="email" />
-            <button type="submit" class="home-join__btn">訂閱 →</button>
+      <section class="intro">
+        <span class="intro__eyebrow" data-reveal>ABOUT</span>
+        <p class="intro__text" data-reveal>
+          I'm Da Jun. <em>This is where I keep proof of a life made on purpose —</em> the morning coffee, the cities I've walked, the things I've made. <em>Take your time.</em>
+        </p>
+      </section>
+
+      <section class="summary">
+        <a class="summary__card" href="#daily" data-goto data-reveal>
+          <img class="summary__img" src="assets/sample-1.png" alt="" />
+          <div class="summary__shade"></div>
+          <div class="summary__body">
+            <span class="summary__num">01</span>
+            <h2 class="summary__title">日常</h2>
+            <p class="summary__desc">Small fragments. Light, coffee, the ordinary kept on purpose.</p>
+            <span class="summary__cta">Enter →</span>
           </div>
-          <p class="home-join__msg" data-join-msg></p>
-        </form>
-      </div>
-    </section>
+        </a>
+        <a class="summary__card" href="#trips" data-goto data-reveal>
+          <img class="summary__img" src="assets/sample-2.png" alt="" />
+          <div class="summary__shade"></div>
+          <div class="summary__body">
+            <span class="summary__num">02</span>
+            <h2 class="summary__title">出遊</h2>
+            <p class="summary__desc">Coordinates, weather, and the things that stayed with me.</p>
+            <span class="summary__cta">Enter →</span>
+          </div>
+        </a>
+        <a class="summary__card" href="#work" data-goto data-reveal>
+          <img class="summary__img" src="assets/sample-1.png" alt="" />
+          <div class="summary__shade"></div>
+          <div class="summary__body">
+            <span class="summary__num">03</span>
+            <h2 class="summary__title">作品集</h2>
+            <p class="summary__desc">Things made alone, or with people I trust.</p>
+            <span class="summary__cta">Enter →</span>
+          </div>
+        </a>
+      </section>
 
-    <!-- CONTACT ICONS -->
-    <section id="contact" class="contact-icons">
-      <h2 class="contact-icons__title" data-reveal>Get in touch
-        
-      </h2>
-      <p class="contact-icons__lede" data-reveal>The doors are usually open. Pick whichever one suits you.</p>
-      <div class="contact-icons__row" data-reveal>
-        <a class="contact-icons__item" href="/cdn-cgi/l/email-protection#137b767f7f7c53777279667d3d7e76" data-label="Email" aria-label="Email">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-        </a>
-        <a class="contact-icons__item" href="https://instagram.com/" target="_blank" rel="noopener" data-label="Instagram" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>
-        </a>
-        <a class="contact-icons__item" href="https://linkedin.com/" target="_blank" rel="noopener" data-label="LinkedIn" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 10v7M8 7v.01M12 17v-4a3 3 0 0 1 6 0v4M12 13v4"/></svg>
-        </a>
-        <a class="contact-icons__item" href="https://github.com/" target="_blank" rel="noopener" data-label="GitHub" aria-label="GitHub">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-4 1.5-4-2-6-2.5M15 22v-4a3 3 0 0 0-.9-2.3c2.6-.3 5.4-1.3 5.4-6 0-1.2-.5-2.3-1.3-3.1.4-1 .4-2.1-.1-3.1 0 0-1-.3-3.4 1.3a11.6 11.6 0 0 0-6 0C6.3 1.6 5.3 1.9 5.3 1.9c-.5 1-.5 2.1-.1 3.1A4.5 4.5 0 0 0 4 8.1c0 4.6 2.8 5.7 5.4 6A3 3 0 0 0 8.5 17v5"/></svg>
-        </a>
-        <a class="contact-icons__item" href="https://x.com/" target="_blank" rel="noopener" data-label="X / Twitter" aria-label="X / Twitter">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 16M20 4 4 20"/></svg>
-        </a>
-        <a class="contact-icons__item" href="https://facebook.com/" target="_blank" rel="noopener" data-label="Facebook" aria-label="Facebook">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 8h2V5h-2a3 3 0 0 0-3 3v2H9v3h2v8h3v-8h2.5l.5-3H14V8z"/></svg>
-        </a>
-        <a class="contact-icons__item" href="https://www.threads.net/" target="_blank" rel="noopener" data-label="Threads" aria-label="Threads">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 9c-1-2-3-3-5-3-3 0-5 2-5 6s2 6 5 6c2 0 4-1 5-3M9 12c1-3 3-3 5-2s2 4 0 5-5 0-5-3"/></svg>
-        </a>
-        <a class="contact-icons__item" href="https://wa.me/" target="_blank" rel="noopener" data-label="WhatsApp" aria-label="WhatsApp">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3.5-7.1L21 4l-1 3.5A9 9 0 0 1 21 12zM8 9c0 4 3 7 7 7l1-2-3-1-1 1c-1 0-2-1-2-2l1-1-1-3-2 1z"/></svg>
-        </a>
-      </div>
-    </section>
+      <section class="home-join">
+        <div class="home-join__inner">
+          <div class="home-join__text">
+            <p class="home-join__label">Newsletter</p>
+            <p class="home-join__desc">偶爾寄出。不打擾。</p>
+          </div>
+          <form class="home-join__form" data-join-form>
+            <div class="home-join__fields">
+              <input type="text" name="name" placeholder="你的名字" autocomplete="given-name" />
+              <input type="email" name="email" placeholder="Email" autocomplete="email" />
+              <button type="submit" class="home-join__btn">訂閱 →</button>
+            </div>
+            <p class="home-join__msg" data-join-msg></p>
+          </form>
+        </div>
+      </section>
 
-    <footer class="footer">
-      <div class="footer__row">
-        <span>© 2026 Da Jun</span>
-        <span>Quietly written in HTML.</span>
+      <section id="contact" class="contact-icons">
+        <h2 class="contact-icons__title" data-reveal>聯絡我</h2>
+        <span class="contact-icons__title-en">Get in touch</span>
+        <p class="contact-icons__lede" data-reveal>The doors are usually open. Pick whichever one suits you.</p>
+        <div class="contact-icons__row" data-reveal>
+          <a class="contact-icons__item" href="mailto:hello@dajun.com" data-label="Email" aria-label="Email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          </a>
+          <a class="contact-icons__item" href="https://instagram.com/" target="_blank" rel="noopener" data-label="Instagram" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>
+          </a>
+          <a class="contact-icons__item" href="https://github.com/" target="_blank" rel="noopener" data-label="GitHub" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-4 1.5-4-2-6-2.5M15 22v-4a3 3 0 0 0-.9-2.3c2.6-.3 5.4-1.3 5.4-6 0-1.2-.5-2.3-1.3-3.1.4-1 .4-2.1-.1-3.1 0 0-1-.3-3.4 1.3a11.6 11.6 0 0 0-6 0C6.3 1.6 5.3 1.9 5.3 1.9c-.5 1-.5 2.1-.1 3.1A4.5 4.5 0 0 0 4 8.1c0 4.6 2.8 5.7 5.4 6A3 3 0 0 0 8.5 17v5"/></svg>
+          </a>
+          <a class="contact-icons__item" href="https://x.com/" target="_blank" rel="noopener" data-label="X / Twitter" aria-label="X / Twitter">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 16M20 4 4 20"/></svg>
+          </a>
+          <a class="contact-icons__item" href="https://www.threads.net/" target="_blank" rel="noopener" data-label="Threads" aria-label="Threads">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 9c-1-2-3-3-5-3-3 0-5 2-5 6s2 6 5 6c2 0 4-1 5-3M9 12c1-3 3-3 5-2s2 4 0 5-5 0-5-3"/></svg>
+          </a>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer__row">
+          <span>© 2026 大軍</span>
+          <span>靜靜地用 HTML 寫成。</span>
+        </div>
+        <div class="footer__big" aria-hidden="true">大軍</div>
+      </footer>
+    </div><!-- /page-home -->
+
+
+    <!-- ═══════════════════════════════════ DAILY ══════════════════════════════════ -->
+    <div id="page-daily" class="page-view">
+      <div class="page-hero">
+        <span class="page-hero__num">— 01</span>
+        <h1 class="page-hero__title" data-split>日常</h1>
+        <span class="page-hero__title-en">Daily Life</span>
+        <p class="page-hero__lede" data-reveal>把平凡的每一天記下來。咖啡、光線、走過的街道，都是值得留存的事。</p>
       </div>
-      <div class="footer__big" aria-hidden="true">大軍</div>
-    </footer>
+
+      <section class="section">
+        <div class="timeline">
+
+          <div class="entry" data-reveal>
+            <div class="entry__media">
+              <img src="assets/daily-1.jpg" alt="晨間咖啡" />
+            </div>
+            <div class="entry__meta">
+              <time>2026.04.28</time>
+              <h3>晨間咖啡</h3>
+              <p>每天早上六點半，在窗邊泡一杯手沖。水溫九十二度，等待兩分半鐘。這段時間是我的。</p>
+            </div>
+          </div>
+
+          <div class="entry entry--reverse" data-reveal>
+            <div class="entry__media">
+              <img src="assets/daily-2.jpg" alt="書店的下午" />
+            </div>
+            <div class="entry__meta">
+              <time>2026.04.22</time>
+              <h3>書店的下午</h3>
+              <p>在舊書店裡翻到一本 1983 年的攝影集。黑白照片，安靜得像是被時間壓扁的空氣。</p>
+            </div>
+          </div>
+
+          <div class="entry" data-reveal>
+            <div class="entry__media">
+              <img src="assets/daily-3.jpg" alt="雨天的窗邊" />
+            </div>
+            <div class="entry__meta">
+              <time>2026.04.15</time>
+              <h3>雨天的窗邊</h3>
+              <p>下了一整天的雨。坐在窗邊讀書，聽見雨水打在鐵皮屋頂的聲音，反覆，有節奏感。</p>
+            </div>
+          </div>
+
+          <div class="entry entry--reverse" data-reveal>
+            <div class="entry__media">
+              <img src="assets/daily-4.jpg" alt="公園的黃昏" />
+            </div>
+            <div class="entry__meta">
+              <time>2026.04.08</time>
+              <h3>公園的黃昏</h3>
+              <p>傍晚五點的陽光是橘色的。公園裡有人在打羽球，有人遛狗。我坐在長椅上什麼都沒做。</p>
+            </div>
+          </div>
+
+          <div class="entry" data-reveal>
+            <div class="entry__media">
+              <img src="assets/daily-5.jpg" alt="深夜的街道" />
+            </div>
+            <div class="entry__meta">
+              <time>2026.03.30</time>
+              <h3>深夜的街道</h3>
+              <p>凌晨兩點，一個人走路回家。路燈把影子拉得很長。這座城市在深夜才真正屬於走路的人。</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer__row">
+          <span>© 2026 大軍</span>
+          <span><a href="#home" style="color:inherit;opacity:.7">← 回首頁</a></span>
+        </div>
+        <div class="footer__big" aria-hidden="true">日常</div>
+      </footer>
+    </div><!-- /page-daily -->
+
+
+    <!-- ═══════════════════════════════════ TRIPS ══════════════════════════════════ -->
+    <div id="page-trips" class="page-view">
+      <div class="page-hero">
+        <span class="page-hero__num">— 02</span>
+        <h1 class="page-hero__title" data-split>出遊</h1>
+        <span class="page-hero__title-en">Trips</span>
+        <p class="page-hero__lede" data-reveal>去過的地方，留下來的感受。座標可以查，但氣味和光線只存在記憶裡。</p>
+      </div>
+
+      <div class="trips">
+
+        <article class="trip" data-trip>
+          <div class="trip__img">
+            <img src="assets/trip-tokyo.jpg" alt="東京" />
+          </div>
+          <div class="trip__overlay">
+            <span class="trip__coord">35.6762° N · 139.6503° E</span>
+            <h2 class="trip__name">東京</h2>
+            <div class="trip__meta">
+              <span>Tokyo, Japan</span>
+              <span>·</span>
+              <span>2025 秋</span>
+            </div>
+            <p style="font-family:var(--f-tc);font-size:clamp(14px,1.2vw,17px);color:var(--fg-dim);max-width:44ch;line-height:1.8;margin:0;">
+              在澀谷的地下鐵出口站了很久。人潮像河水，我像一塊石頭。深夜的拉麵店，老闆一個人，木頭吧台，三個座位。
+            </p>
+          </div>
+        </article>
+
+        <article class="trip" data-trip>
+          <div class="trip__img">
+            <img src="assets/trip-kyoto.jpg" alt="京都" />
+          </div>
+          <div class="trip__overlay">
+            <span class="trip__coord">35.0116° N · 135.7681° E</span>
+            <h2 class="trip__name">京都</h2>
+            <div class="trip__meta">
+              <span>Kyoto, Japan</span>
+              <span>·</span>
+              <span>2025 秋</span>
+            </div>
+            <p style="font-family:var(--f-tc);font-size:clamp(14px,1.2vw,17px);color:var(--fg-dim);max-width:44ch;line-height:1.8;margin:0;">
+              清晨五點的伏見稻荷。只有我跟幾隻烏鴉。橘色鳥居在霧裡重複，重複，消失。那是我看過最安靜的橘色。
+            </p>
+          </div>
+        </article>
+
+        <article class="trip" data-trip>
+          <div class="trip__img">
+            <img src="assets/trip-newyork.jpg" alt="紐約" />
+          </div>
+          <div class="trip__overlay">
+            <span class="trip__coord">40.7128° N · 74.0060° W</span>
+            <h2 class="trip__name">紐約</h2>
+            <div class="trip__meta">
+              <span>New York, USA</span>
+              <span>·</span>
+              <span>2024 夏</span>
+            </div>
+            <p style="font-family:var(--f-tc);font-size:clamp(14px,1.2vw,17px);color:var(--fg-dim);max-width:44ch;line-height:1.8;margin:0;">
+              布魯克林的書店下午三點，陽光從窗戶斜進來。老店員在看報紙，沒有人說話。我買了一本不認識作者的書。
+            </p>
+          </div>
+        </article>
+
+        <article class="trip" data-trip>
+          <div class="trip__img">
+            <img src="assets/trip-tainan.jpg" alt="台南" />
+          </div>
+          <div class="trip__overlay">
+            <span class="trip__coord">22.9908° N · 120.2133° E</span>
+            <h2 class="trip__name">台南</h2>
+            <div class="trip__meta">
+              <span>Tainan, Taiwan</span>
+              <span>·</span>
+              <span>2024 冬</span>
+            </div>
+            <p style="font-family:var(--f-tc);font-size:clamp(14px,1.2vw,17px);color:var(--fg-dim);max-width:44ch;line-height:1.8;margin:0;">
+              騎腳踏車穿過老街巷子，繞進一間沒有招牌的早餐店。老闆娘用台語問要不要加蛋，我說好。那碗湯很燙，很鹹，很好。
+            </p>
+          </div>
+        </article>
+
+      </div>
+
+      <footer class="footer">
+        <div class="footer__row">
+          <span>© 2026 大軍</span>
+          <span><a href="#home" style="color:inherit;opacity:.7">← 回首頁</a></span>
+        </div>
+        <div class="footer__big" aria-hidden="true">出遊</div>
+      </footer>
+    </div><!-- /page-trips -->
+
+
+    <!-- ═══════════════════════════════════ WORK ═══════════════════════════════════ -->
+    <div id="page-work" class="page-view">
+      <div class="page-hero">
+        <span class="page-hero__num">— 03</span>
+        <h1 class="page-hero__title" data-split>作品集</h1>
+        <span class="page-hero__title-en">Selected Work</span>
+        <p class="page-hero__lede" data-reveal>獨自完成的，或是和信任的人一起做的。每一件都有它被做出來的理由。</p>
+      </div>
+
+      <section class="section">
+        <div class="works">
+
+          <a class="work" href="#" data-reveal>
+            <div class="work__cover">
+              <img src="assets/work-1.jpg" alt="個人網站" />
+            </div>
+            <div class="work__info">
+              <p class="work__year">2026</p>
+              <h3>個人網站</h3>
+              <p>你現在看到的這個網站。日系簡約與美式復古的融合，用一個 HTML 檔案寫完。</p>
+              <div class="work__tags">
+                <i>HTML</i><i>CSS</i><i>JavaScript</i>
+              </div>
+            </div>
+          </a>
+
+          <a class="work" href="#" data-reveal>
+            <div class="work__cover">
+              <img src="assets/work-2.jpg" alt="量化交易系統" />
+            </div>
+            <div class="work__info">
+              <p class="work__year">2025</p>
+              <h3>Hyperliquid 跟單系統</h3>
+              <p>部署在 Hyperliquid 永續合約上的跟單交易系統，含六維度評分篩選與三層停損機制。</p>
+              <div class="work__tags">
+                <i>Python</i><i>Quant</i><i>DeFi</i>
+              </div>
+            </div>
+          </a>
+
+          <a class="work" href="#" data-reveal>
+            <div class="work__cover">
+              <img src="assets/work-3.jpg" alt="資料視覺化" />
+            </div>
+            <div class="work__info">
+              <p class="work__year">2025</p>
+              <h3>市場資料視覺化</h3>
+              <p>加密貨幣市場的即時資料視覺化儀表板，涵蓋波動率、夏普比率與回撤分析。</p>
+              <div class="work__tags">
+                <i>Python</i><i>Plotly</i><i>Statistics</i>
+              </div>
+            </div>
+          </a>
+
+          <a class="work" href="#" data-reveal>
+            <div class="work__cover">
+              <img src="assets/work-4.jpg" alt="學術研究" />
+            </div>
+            <div class="work__info">
+              <p class="work__year">2024</p>
+              <h3>OLS 迴歸分析研究</h3>
+              <p>東吳大學統計與財務工程研究，涵蓋殘差性質、Gauss-Markov 定理與 MLE 推導。</p>
+              <div class="work__tags">
+                <i>Statistics</i><i>R</i><i>Econometrics</i>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer__row">
+          <span>© 2026 大軍</span>
+          <span><a href="#home" style="color:inherit;opacity:.7">← 回首頁</a></span>
+        </div>
+        <div class="footer__big" aria-hidden="true">作品集</div>
+      </footer>
+    </div><!-- /page-work -->
+
+
+    <!-- ═══════════════════════════════════ JOIN ═══════════════════════════════════ -->
+    <div id="page-join" class="page-view">
+      <div class="page-hero">
+        <span class="page-hero__num">— 04</span>
+        <h1 class="page-hero__title" data-split>加入</h1>
+        <span class="page-hero__title-en">Join</span>
+        <p class="page-hero__lede" data-reveal>不頻繁，不推銷。偶爾寄出一封信，告訴你有新的東西了。</p>
+      </div>
+
+      <section class="section--join">
+        <div class="join">
+          <div class="join__head">
+            <h2 data-reveal>訂閱電子報</h2>
+            <p data-reveal>填入你的名字和 Email，有新的日常、旅程或作品時，我會第一個通知你。沒有廣告，沒有垃圾。</p>
+          </div>
+          <form class="join__form" data-join-form data-reveal>
+            <div class="field">
+              <label for="join-name">名字</label>
+              <input id="join-name" type="text" name="name" placeholder="你的名字" autocomplete="given-name" />
+              <span class="field__line"></span>
+            </div>
+            <div class="field">
+              <label for="join-email">Email</label>
+              <input id="join-email" type="email" name="email" placeholder="hello@example.com" autocomplete="email" />
+              <span class="field__line"></span>
+            </div>
+            <button type="submit" class="btn btn--solid">
+              訂閱
+              <span class="btn__icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </span>
+            </button>
+            <p class="join__note">隨時可以取消訂閱。</p>
+            <p class="join__msg" data-join-msg></p>
+          </form>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer__row">
+          <span>© 2026 大軍</span>
+          <span><a href="#home" style="color:inherit;opacity:.7">← 回首頁</a></span>
+        </div>
+        <div class="footer__big" aria-hidden="true">加入</div>
+      </footer>
+    </div><!-- /page-join -->
+
   </main>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-/* ░░░ shared script — no custom cursor ░░░ */
+<script>
+/* ░░░ 大軍的個人網站 — SPA + shared script ░░░ */
 (() => {
   const prefersReduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* nav scrolled state */
+  /* ── Nav scrolled state ─────────────────────────────── */
   const nav = document.querySelector('[data-nav]');
-  const onScroll = () => {
-    if (nav) nav.classList.toggle('is-scrolled', scrollY > 24);
-  };
+  const onScroll = () => { if (nav) nav.classList.toggle('is-scrolled', scrollY > 24); };
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  /* mobile sheet */
+  /* ── Mobile sheet ───────────────────────────────────── */
   const menuBtn = document.querySelector('[data-menu]');
-  const sheet = document.querySelector('[data-sheet]');
+  const sheet   = document.querySelector('[data-sheet]');
+  const closeSheet = () => {
+    menuBtn?.classList.remove('is-open');
+    sheet?.classList.remove('is-open');
+    sheet?.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  };
   if (menuBtn && sheet) {
-    const close = () => {
-      menuBtn.classList.remove('is-open');
-      sheet.classList.remove('is-open');
-      sheet.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    };
     menuBtn.addEventListener('click', () => {
       const open = !sheet.classList.contains('is-open');
       menuBtn.classList.toggle('is-open', open);
@@ -1199,41 +1508,39 @@ body::before {
       sheet.setAttribute('aria-hidden', open ? 'false' : 'true');
       document.body.style.overflow = open ? 'hidden' : '';
     });
-    sheet.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+    sheet.querySelectorAll('a').forEach(a => a.addEventListener('click', closeSheet));
   }
 
-  /* split text (word + per-letter for CJK) */
-  document.querySelectorAll('[data-split]').forEach((el) => {
+  /* ── Split text (CJK per-char / EN per-word) ────────── */
+  const splitEl = (el) => {
+    if (el.dataset.splitDone) return;
+    el.dataset.splitDone = '1';
     const text = el.textContent.trim();
     const isCJK = /[\u3000-\u9FFF\uFF00-\uFFEF]/.test(text);
     el.textContent = '';
     let i = 0;
     if (isCJK) {
-      [...text].forEach((ch) => {
-        const word = document.createElement('span');
-        word.className = 'word';
+      [...text].forEach(ch => {
+        const word = document.createElement('span'); word.className = 'word';
         const inner = document.createElement('span');
         inner.style.setProperty('--i', i++);
         inner.textContent = ch === ' ' ? '\u00a0' : ch;
-        word.appendChild(inner);
-        el.appendChild(word);
+        word.appendChild(inner); el.appendChild(word);
       });
     } else {
-      const words = text.split(/(\s+)/);
-      words.forEach((w) => {
+      text.split(/(\s+)/).forEach(w => {
         if (/^\s+$/.test(w)) { el.appendChild(document.createTextNode(' ')); return; }
-        const word = document.createElement('span');
-        word.className = 'word';
+        const word = document.createElement('span'); word.className = 'word';
         const inner = document.createElement('span');
         inner.style.setProperty('--i', i++);
         inner.textContent = w;
-        word.appendChild(inner);
-        el.appendChild(word);
+        word.appendChild(inner); el.appendChild(word);
       });
     }
-  });
+  };
+  document.querySelectorAll('[data-split]').forEach(splitEl);
 
-  /* reveal on scroll */
+  /* ── IntersectionObserver for reveals ───────────────── */
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) {
       if (e.isIntersecting) {
@@ -1244,76 +1551,125 @@ body::before {
         io.unobserve(e.target);
       }
     }
-  }, { threshold: 0.18, rootMargin: '0px 0px -10% 0px' });
-  document.querySelectorAll('[data-reveal], [data-split], [data-trip]').forEach((el) => io.observe(el));
+  }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
 
-  /* hero parallax */
+  const observePage = (root) => {
+    root.querySelectorAll('[data-reveal], [data-split], [data-trip]').forEach(el => {
+      el.classList.remove('is-in');
+      io.observe(el);
+    });
+  };
+
+  /* ── Parallax ───────────────────────────────────────── */
   const heroBg = document.querySelector('.hero__bg');
   if (heroBg && !prefersReduce) {
     addEventListener('scroll', () => {
       const y = Math.min(scrollY, innerHeight);
-      heroBg.style.transform = `translate3d(0, ${y * 0.18}px, 0)`;
+      heroBg.style.transform = `translate3d(0,${y * 0.18}px,0)`;
     }, { passive: true });
   }
-
-  /* trip parallax */
-  document.querySelectorAll('.trip').forEach((trip) => {
+  document.querySelectorAll('.trip').forEach(trip => {
     const img = trip.querySelector('.trip__img');
     if (!img || prefersReduce) return;
     addEventListener('scroll', () => {
       const r = trip.getBoundingClientRect();
       const c = (r.top + r.height / 2) - innerHeight / 2;
-      img.style.transform = `translate3d(0, ${c * -0.08}px, 0)`;
+      img.style.transform = `translate3d(0,${c * -0.08}px,0)`;
     }, { passive: true });
   });
 
-  /* image fallback to SVG placeholder */
-  const PLACEHOLDER_SVGS = [
-    `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1000'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23222'/><stop offset='1' stop-color='%23000'/></linearGradient></defs><rect width='800' height='1000' fill='url(%23g)'/><circle cx='400' cy='420' r='160' fill='none' stroke='%23ffffff22' stroke-width='1'/><circle cx='400' cy='420' r='90' fill='none' stroke='%23ffffff33' stroke-width='1'/><line x1='0' y1='720' x2='800' y2='720' stroke='%23ffffff15'/><text x='40' y='760' fill='%23ffffff66' font-family='ui-monospace,monospace' font-size='12' letter-spacing='3'>PLACEHOLDER</text></svg>`)}`,
-    `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1000'><defs><linearGradient id='g2' x1='0' y1='1' x2='1' y2='0'><stop offset='0' stop-color='%23111'/><stop offset='1' stop-color='%23333'/></linearGradient></defs><rect width='800' height='1000' fill='url(%23g2)'/><path d='M0 600 Q200 540 400 600 T800 600 L800 1000 L0 1000 Z' fill='%23000' opacity='0.6'/><path d='M0 700 Q200 640 400 700 T800 700 L800 1000 L0 1000 Z' fill='%23000' opacity='0.5'/><line x1='0' y1='280' x2='800' y2='280' stroke='%23ffffff15'/><text x='40' y='320' fill='%23ffffff66' font-family='ui-monospace,monospace' font-size='12' letter-spacing='3'>PLACEHOLDER</text></svg>`)}`
+  /* ── Image placeholder fallback ─────────────────────── */
+  const PH = [
+    `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1000'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23201c18'/><stop offset='1' stop-color='%230d0b09'/></linearGradient></defs><rect width='800' height='1000' fill='url(%23g)'/><circle cx='400' cy='420' r='160' fill='none' stroke='%23ede8da14' stroke-width='1'/><line x1='0' y1='720' x2='800' y2='720' stroke='%23ede8da0d'/><text x='40' y='760' fill='%23ede8da33' font-family='monospace' font-size='12' letter-spacing='3'>NO IMAGE</text></svg>`)}`,
+    `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1000'><defs><linearGradient id='g2' x1='0' y1='1' x2='1' y2='0'><stop offset='0' stop-color='%23181411'/><stop offset='1' stop-color='%23252019'/></linearGradient></defs><rect width='800' height='1000' fill='url(%23g2)'/><path d='M0 600 Q200 540 400 600 T800 600 L800 1000 L0 1000 Z' fill='%230d0b09' opacity='0.6'/><text x='40' y='320' fill='%23ede8da33' font-family='monospace' font-size='12' letter-spacing='3'>NO IMAGE</text></svg>`)}`
   ];
   let __pIdx = 0;
-  document.querySelectorAll('img').forEach((img) => {
+  document.querySelectorAll('img').forEach(img => {
     img.addEventListener('error', () => {
-      const fb = PLACEHOLDER_SVGS[(__pIdx++) % PLACEHOLDER_SVGS.length];
+      const fb = PH[(__pIdx++) % PH.length];
       if (img.src !== fb) img.src = fb;
     }, { once: true });
     if (img.complete && img.naturalWidth === 0) img.dispatchEvent(new Event('error'));
   });
 
-  /* JOIN form (Formspree-ready) — handles both full & compact forms */
-  const FORMSPREE_ENDPOINT = ''; // e.g. 'https://formspree.io/f/abcdwxyz'
-  document.querySelectorAll('[data-join-form]').forEach((form) => {
-    const msg = form.querySelector('[data-join-msg]') || form.closest('section')?.querySelector('[data-join-msg]') || form.parentElement?.querySelector('[data-join-msg]');
-    if (!form) return;
-    form.addEventListener('submit', async (e) => {
+  /* ── SPA Router ─────────────────────────────────────── */
+  const allPageViews = document.querySelectorAll('.page-view');
+  const navAllLinks  = document.querySelectorAll('.nav__links a, .sheet a, .nav__brand');
+  const PAGE_MAP = { home:'page-home', daily:'page-daily', trips:'page-trips', work:'page-work', join:'page-join' };
+
+  function showPage(id) {
+    const targetId = PAGE_MAP[id] || 'page-home';
+    const canonId  = Object.keys(PAGE_MAP).find(k => PAGE_MAP[k] === targetId) || 'home';
+    allPageViews.forEach(p => p.classList.remove('is-active'));
+    const page = document.getElementById(targetId);
+    if (page) {
+      page.classList.add('is-active');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      observePage(page);
+    }
+    navAllLinks.forEach(a => {
+      const href = (a.getAttribute('href') || '').replace('#','');
+      a.classList.toggle('is-active', href === canonId);
+    });
+    closeSheet();
+  }
+
+  function route() {
+    const hash = (location.hash || '#home').slice(1);
+    if (hash === 'contact') {
+      showPage('home');
+      setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 320);
+    } else {
+      showPage(hash in PAGE_MAP ? hash : 'home');
+    }
+  }
+
+  addEventListener('hashchange', route);
+
+  document.querySelectorAll('[data-goto]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      const target = (el.getAttribute('href') || '').replace('#','');
+      history.pushState(null, '', '#' + target);
+      route();
+    });
+  });
+
+  route();
+
+  /* ── Join forms ─────────────────────────────────────── */
+  const FORMSPREE = '';
+  document.querySelectorAll('[data-join-form]').forEach(form => {
+    const msg = form.querySelector('[data-join-msg]')
+              ?? form.closest('section')?.querySelector('[data-join-msg]')
+              ?? form.parentElement?.querySelector('[data-join-msg]');
+    form.addEventListener('submit', async e => {
       e.preventDefault();
       if (msg) { msg.className = 'home-join__msg join__msg'; msg.textContent = ''; }
-      const data = new FormData(form);
-      const name = (data.get('name') || '').toString().trim();
-      const email = (data.get('email') || '').toString().trim();
-      if (!name) { if (msg) { msg.classList.add('is-error'); msg.textContent = '請輸入名字'; } return; }
+      const fd    = new FormData(form);
+      const name  = (fd.get('name')  || '').toString().trim();
+      const email = (fd.get('email') || '').toString().trim();
+      if (!name)  { if (msg) { msg.classList.add('is-error'); msg.textContent = '請輸入名字'; } return; }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { if (msg) { msg.classList.add('is-error'); msg.textContent = '請輸入有效的 Email'; } return; }
       if (msg) msg.textContent = '傳送中…';
       try {
-        if (FORMSPREE_ENDPOINT) {
-          const res = await fetch(FORMSPREE_ENDPOINT, { method: 'POST', headers: { 'Accept': 'application/json' }, body: data });
-          if (!res.ok) throw new Error('bad response');
+        if (FORMSPREE) {
+          const res = await fetch(FORMSPREE, { method:'POST', headers:{ Accept:'application/json' }, body: fd });
+          if (!res.ok) throw new Error();
         } else {
           const list = JSON.parse(localStorage.getItem('dajun_subscribers') || '[]');
           list.push({ name, email, at: new Date().toISOString() });
           localStorage.setItem('dajun_subscribers', JSON.stringify(list));
-          await new Promise((r) => setTimeout(r, 600));
+          await new Promise(r => setTimeout(r, 600));
         }
         if (msg) { msg.classList.add('is-success'); msg.textContent = `歡迎，${name}。有新內容我會通知你。`; }
         form.reset();
-      } catch (err) {
+      } catch {
         if (msg) { msg.classList.add('is-error'); msg.textContent = '發生錯誤，請稍後再試。'; }
       }
     });
   });
 })();
-
 </script>
 </body>
 </html>
