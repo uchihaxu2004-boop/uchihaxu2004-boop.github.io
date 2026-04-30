@@ -21,8 +21,8 @@
   --fg-faint: rgba(237,232,218,.36);
   --line: rgba(237,232,218,.10);
   --line-strong: rgba(237,232,218,.24);
-  --accent: #b89660;
-  --accent-dim: rgba(184,150,96,.35);
+  --accent: #b0b0b0;
+  --accent-dim: rgba(176,176,176,.30);
   --max: 1320px;
   --pad-x: clamp(20px, 4vw, 56px);
   --ease: cubic-bezier(.2,.7,.2,1);
@@ -218,11 +218,15 @@ body::before {
 }
 
 .hero__content {
-  align-self: end;
-  padding: 0 var(--pad-x) clamp(80px, 14vh, 160px);
+  align-self: center;
+  padding: 80px var(--pad-x) 60px;
   max-width: var(--max);
   margin: 0 auto;
   width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .hero__eyebrow {
   font-family: var(--f-mono);
@@ -234,12 +238,12 @@ body::before {
 }
 .hero__title {
   font-family: var(--f-tc);
-  font-size: clamp(56px, 11vw, 168px);
+  font-size: clamp(28px, 9vw, 160px);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: .95;
   margin: 0;
-  text-wrap: balance;
+  white-space: nowrap;
 }
 .hero__sub {
   margin: 28px 0 0;
@@ -928,12 +932,12 @@ body::before {
 }
 .footer__big {
   font-family: var(--f-tc);
-  font-size: clamp(140px, 28vw, 460px);
+  font-size: clamp(140px, 30vw, 480px);
   font-weight: 800;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.03em;
   line-height: .85;
   text-align: center;
-  background: linear-gradient(180deg, rgba(184,150,96,.10) 0%, rgba(184,150,96,0) 100%);
+  background: linear-gradient(180deg, rgba(176,176,176,.18) 0%, rgba(176,176,176,.04) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -996,7 +1000,7 @@ body::before {
   font-weight: 600;
   line-height: 1;
   color: var(--accent);
-  background: rgba(184,150,96,.06);
+  background: rgba(176,176,176,.06);
 }
 .nav__brand-text {
   font-family: var(--f-tc);
@@ -1161,7 +1165,7 @@ body::before {
         <span>© 2026 Da Jun</span>
         <span>Quietly written in HTML.</span>
       </div>
-      <div class="footer__big" aria-hidden="true">DA JUN</div>
+      <div class="footer__big" aria-hidden="true">大軍</div>
     </footer>
   </main>
 
