@@ -245,20 +245,33 @@ body::before {
 .summary__card {
   position: relative; overflow: hidden; cursor: pointer;
   aspect-ratio: 2/3;
-  display: flex; align-items: flex-end;
+  display: flex; flex-direction: column;
+  border-right: 1px solid var(--line);
+}
+.summary__card:last-child { border-right: none; }
+.summary__card:hover .summary__img { transform: scale(1.04); }
+.summary__frame {
+  flex: 1;
+  border: 1px dashed rgba(237,232,218,.20);
+  margin: clamp(14px,2vw,24px) clamp(14px,2vw,24px) 0;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  transition: border-color .3s;
+}
+.summary__card:hover .summary__frame { border-color: rgba(237,232,218,.38); }
+.summary__frame-label {
+  font-family: var(--f-mono); font-size: 9px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--fg-faint);
 }
 .summary__img {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
   transition: transform .8s var(--ease);
 }
-.summary__card:hover .summary__img { transform: scale(1.04); }
-.summary__shade {
-  position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(13,11,9,.85) 0%, rgba(13,11,9,.1) 60%);
-}
+.summary__shade { display: none; }
 .summary__body {
-  position: relative; z-index: 2; padding: clamp(20px,3vw,36px);
+  padding: clamp(14px,2vw,22px) clamp(14px,2vw,24px) clamp(18px,2.5vw,28px);
   display: flex; flex-direction: column; gap: 6px;
+  flex-shrink: 0;
 }
 .summary__num {
   font-family: var(--f-mono); font-size: 11px; letter-spacing: .25em; color: var(--accent);
@@ -496,8 +509,10 @@ body::before {
 
       <section class="summary">
         <a class="summary__card" href="#daily" data-goto data-reveal>
-          <img class="summary__img" src="assets/sample-1.png" alt="" />
-          <div class="summary__shade"></div>
+          <div class="summary__frame">
+            <img class="summary__img" src="assets/sample-1.png" alt="" />
+            <span class="summary__frame-label">Photo</span>
+          </div>
           <div class="summary__body">
             <span class="summary__num">01</span>
             <h2 class="summary__title">Daily Life</h2>
@@ -506,8 +521,10 @@ body::before {
           </div>
         </a>
         <a class="summary__card" href="#trips" data-goto data-reveal>
-          <img class="summary__img" src="assets/sample-2.png" alt="" />
-          <div class="summary__shade"></div>
+          <div class="summary__frame">
+            <img class="summary__img" src="assets/sample-2.png" alt="" />
+            <span class="summary__frame-label">Photo</span>
+          </div>
           <div class="summary__body">
             <span class="summary__num">02</span>
             <h2 class="summary__title">Trips</h2>
@@ -516,8 +533,10 @@ body::before {
           </div>
         </a>
         <a class="summary__card" href="#work" data-goto data-reveal>
-          <img class="summary__img" src="assets/sample-1.png" alt="" />
-          <div class="summary__shade"></div>
+          <div class="summary__frame">
+            <img class="summary__img" src="assets/sample-1.png" alt="" />
+            <span class="summary__frame-label">Photo</span>
+          </div>
           <div class="summary__body">
             <span class="summary__num">03</span>
             <h2 class="summary__title">Work</h2>
