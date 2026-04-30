@@ -936,8 +936,9 @@ body::before {
 
   route();
 
-  /* ── Join forms ─────────────────────────────────────── */
-  const FORMSPREE = '';
+  /* ── Join forms → Google Sheets ─────────────────────── */
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbxn1q30r6NWDaoCm_s5nUaO8ntfNgp2MocShtSnlzbyfzexGHwSwh5K7Na32mZAJnsRHg/exec';
+
   document.querySelectorAll('[data-join-form]').forEach(form => {
     const msg = form.querySelector('[data-join-msg]')
               ?? form.closest('section')?.querySelector('[data-join-msg]')
@@ -952,15 +953,12 @@ body::before {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { if (msg) { msg.classList.add('is-error'); msg.textContent = 'Please enter a valid email'; } return; }
       if (msg) msg.textContent = 'Sending…';
       try {
-        if (FORMSPREE) {
-          const res = await fetch(FORMSPREE, { method:'POST', headers:{ Accept:'application/json' }, body: fd });
-          if (!res.ok) throw new Error();
-        } else {
-          const list = JSON.parse(localStorage.getItem('dajun_subscribers') || '[]');
-          list.push({ name, email, at: new Date().toISOString() });
-          localStorage.setItem('dajun_subscribers', JSON.stringify(list));
-          await new Promise(r => setTimeout(r, 600));
-        }
+        await fetch(GAS_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email })
+        });
         if (msg) { msg.classList.add('is-success'); msg.textContent = `Welcome, ${name}. I'll be in touch.`; }
         form.reset();
       } catch {
