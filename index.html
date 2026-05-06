@@ -77,57 +77,52 @@ body {
 
 /* Home */
 .home { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; overflow: hidden; }
-.home-content { z-index: 10; position: relative; }
+.home-content { z-index: 3; position: relative; }
 .home-title { margin-bottom: 2rem; }
 .title-cn { display: block; font-family: var(--font-cn); font-size: clamp(2rem, 5vw, 3.5rem); color: var(--color-white); letter-spacing: 0.15em; margin-bottom: 1.5rem; animation: fadeInUp 1s var(--transition-smooth); text-shadow: 0 2px 30px rgba(0,0,0,0.8); }
 .title-en { display: block; font-family: var(--font-display); font-size: clamp(1.125rem, 2.5vw, 1.5rem); font-style: italic; color: var(--color-silver); font-weight: 400; letter-spacing: 0.05em; position: relative; animation: fadeInUp 1s 0.2s var(--transition-smooth) backwards; }
 .title-en::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; color: var(--color-white); clip-path: inset(0 100% 0 0); animation: revealText 2s 1s var(--transition-smooth) forwards; }
 .home-desc { font-size: 1rem; color: var(--color-silver-dim); max-width: 400px; margin: 0 auto 3rem; line-height: 1.8; animation: fadeInUp 1s 0.4s backwards; }
 
-/* ============================================
-   Sunflower Field Background — individual flowers follow mouse
-   ============================================ */
-.sunflower-bg {
+/* Symbol Pattern Background */
+.symbol-bg {
     position: absolute;
     inset: 0;
+    width: 100%;
+    height: 100%;
     z-index: 1;
     pointer-events: none;
     overflow: hidden;
 }
-.sunflower-img-wrap {
-    position: absolute;
-    bottom: 0;
-    left: 0;
+.symbol-bg svg {
     width: 100%;
-    line-height: 0;
-}
-.sunflower-base {
-    width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
-    opacity: 0.9;
 }
-.sunflower-flower {
-    position: absolute;
-    left: var(--fleft);
-    top: var(--ftop);
-    width: var(--fwidth);
-    height: auto;
-    transform: translate(-50%, -50%) perspective(500px) rotateX(var(--rotX, 0deg)) rotateY(var(--rotY, 0deg));
-    transform-origin: center center;
+.symbol-bg::after {
+    /* very subtle vignette to focus eye on title */
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.25) 45%, rgba(10,10,10,0) 80%);
     pointer-events: none;
-    will-change: transform;
-    transition: transform 0.08s ease-out;
-    z-index: 2;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
 }
-/* Dark gradient overlays keep text readable */
-.sunflower-overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 3;
-    pointer-events: none;
-    background: linear-gradient(to top, rgba(10,10,10,0.25) 0%, rgba(10,10,10,0.50) 40%, rgba(10,10,10,0.80) 70%, rgba(10,10,10,0.96) 100%);
+.symbol {
+    transition: opacity .3s ease;
+}
+.symbol > * {
+    fill: none;
+    stroke: #c8c8c8;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 0 1px rgba(255,255,255,0.4));
+}
+.symbol:hover { opacity: 1 !important; }
+.symbol:hover > * { stroke: var(--color-white); }
+@keyframes symbolPulse {
+    0%, 100% { opacity: var(--op, 0.6); }
+    50%       { opacity: calc(var(--op, 0.6) * 0.55); }
 }
 
 /* Buttons */
@@ -139,7 +134,7 @@ body {
 .btn-arrow { width: 20px; height: 20px; transition: transform 0.3s; }
 .btn-primary:hover .btn-arrow { transform: translate(4px, -4px); }
 
-.scroll-indicator { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); z-index: 10; cursor: pointer; background: transparent; border: none; padding: 0.75rem; color: var(--color-silver-dim); transition: color var(--transition-smooth), transform var(--transition-smooth); animation: fadeInUp 1s 0.6s backwards; }
+.scroll-indicator { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); z-index: 3; cursor: pointer; background: transparent; border: none; padding: 0.75rem; color: var(--color-silver-dim); transition: color var(--transition-smooth), transform var(--transition-smooth); animation: fadeInUp 1s 0.6s backwards; }
 .scroll-indicator:hover { color: var(--color-white); }
 .scroll-arrow { display: block; width: 28px; height: 44px; animation: scrollBounce 2.2s ease-in-out infinite; }
 .scroll-arrow path { stroke: currentColor; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
@@ -374,23 +369,8 @@ body {
 
     <!-- Home Section -->
     <section id="home" class="section home">
-        <div class="sunflower-bg" id="sunflowerBg" aria-hidden="true">
-            <div class="sunflower-img-wrap">
-                <img src="sunflower-field.png" class="sunflower-base" alt="" draggable="false">
-                <img src="flowers/flower_01.png" class="sunflower-flower" style="--fleft:58.70%; --ftop:70.87%; --fwidth:16.65%;" alt="" draggable="false">
-                <img src="flowers/flower_02.png" class="sunflower-flower" style="--fleft:30.88%; --ftop:80.98%; --fwidth:14.49%;" alt="" draggable="false">
-                <img src="flowers/flower_03.png" class="sunflower-flower" style="--fleft:78.91%; --ftop:92.29%; --fwidth:14.10%;" alt="" draggable="false">
-                <img src="flowers/flower_04.png" class="sunflower-flower" style="--fleft:68.68%; --ftop:77.48%; --fwidth:13.09%;" alt="" draggable="false">
-                <img src="flowers/flower_05.png" class="sunflower-flower" style="--fleft:82.97%; --ftop:66.47%; --fwidth:11.44%;" alt="" draggable="false">
-                <img src="flowers/flower_06.png" class="sunflower-flower" style="--fleft:21.03%; --ftop:59.36%; --fwidth:11.44%;" alt="" draggable="false">
-                <img src="flowers/flower_07.png" class="sunflower-flower" style="--fleft:89.77%; --ftop:86.49%; --fwidth:10.80%;" alt="" draggable="false">
-                <img src="flowers/flower_08.png" class="sunflower-flower" style="--fleft:17.98%; --ftop:86.59%; --fwidth:10.42%;" alt="" draggable="false">
-                <img src="flowers/flower_09.png" class="sunflower-flower" style="--fleft:78.46%; --ftop:77.18%; --fwidth:9.78%;" alt="" draggable="false">
-                <img src="flowers/flower_10.png" class="sunflower-flower" style="--fleft:42.50%; --ftop:71.57%; --fwidth:9.66%;" alt="" draggable="false">
-                <img src="flowers/flower_11.png" class="sunflower-flower" style="--fleft:36.15%; --ftop:62.56%; --fwidth:9.15%;" alt="" draggable="false">
-                <img src="flowers/flower_12.png" class="sunflower-flower" style="--fleft:93.39%; --ftop:70.37%; --fwidth:9.28%;" alt="" draggable="false">
-            </div>
-            <div class="sunflower-overlay"></div>
+        <div class="symbol-bg" id="symbolBg" aria-hidden="true">
+          <!-- SVG injected by JS -->
         </div>
         <div class="noise-overlay"></div>
         <div class="home-content">
@@ -494,71 +474,97 @@ body {
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ============================================
-   Sunflower Field — each flower independently follows the mouse like real sunflowers tracking the sun
+   Symbol Pattern Background
+   - 11 silver-line symbols, randomized but stable per load
+   - distributed across hero with size/rotation variation
    ============================================ */
-function initSunflowerFollow() {
-    const flowers = document.querySelectorAll('.sunflower-flower');
-    const home = document.getElementById('home');
-    if (!flowers.length || !home) return;
+function buildSymbolBg() {
+    const wrap = document.getElementById('symbolBg');
+    if (!wrap) return;
 
-    // Per-flower smooth state
-    const state = new Map();
-    flowers.forEach(f => state.set(f, { x: 0, y: 0 }));
+    const W = 1600, H = 1000;
+    const symbols = ['circle','square','diamond','spade','club','heart','star','moon','triangle','hexagram','clover'];
 
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
+    // Path builders centered at (0,0), drawn within roughly -50..50
+    const SYMBOL_PATHS = {
+        circle:   '<circle cx="0" cy="0" r="42" />',
+        square:   '<rect x="-40" y="-40" width="80" height="80" />',
+        diamond:  '<polygon points="0,-46 38,0 0,46 -38,0" />',
+        spade:    '<path d="M0,-44 C 22,-22 44,-6 44,14 C 44,30 28,40 12,32 C 14,40 20,46 28,48 L -28,48 C -20,46 -14,40 -12,32 C -28,40 -44,30 -44,14 C -44,-6 -22,-22 0,-44 Z" />',
+        club:     '<path d="M0,-30 a18,18 0 1 1 -8,33 a18,18 0 1 1 -22,12 a18,18 0 1 1 22,12 q -2,8 -10,16 l 36,0 q -8,-8 -10,-16 a18,18 0 1 1 22,-12 a18,18 0 1 1 -22,-12 a18,18 0 1 1 -8,-33 Z" />',
+        heart:    '<path d="M0,38 C -34,18 -46,-2 -38,-22 C -30,-40 -8,-40 0,-22 C 8,-40 30,-40 38,-22 C 46,-2 34,18 0,38 Z" />',
+        star:     '<polygon points="0,-46 11,-14 44,-14 17,6 28,38 0,18 -28,38 -17,6 -44,-14 -11,-14" />',
+        moon:     '<path d="M14,-38 A 42,42 0 1 0 14,38 A 32,32 0 1 1 14,-38 Z" />',
+        triangle: '<polygon points="0,-44 40,32 -40,32" />',
+        hexagram: '<polygon points="0,-46 13,-23 39,-23 26,0 39,23 13,23 0,46 -13,23 -39,23 -26,0 -39,-23 -13,-23" />',
+        clover:   '<path d="M0,0 q -18,-22 -2,-32 q 18,-10 6,12 q 22,-12 28,8 q 6,18 -16,12 q 18,12 8,28 q -10,16 -22,-2 q -2,22 -22,18 q -20,-4 -8,-22 q -22,4 -24,-14 q -2,-18 18,-14 Z M 0,8 l -3,18 l 6,0 Z" />'
+    };
 
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-    document.addEventListener('touchmove', (e) => {
-        if (e.touches.length) { mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; }
-    }, { passive: true });
+    // Stable pseudo-random sequence (so layout is predictable each load)
+    let seed = 7;
+    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
 
-    function animate() {
-        const homeRect = home.getBoundingClientRect();
-        const homeW = homeRect.width;
-        const homeH = homeRect.height;
+    // Place symbols on a jittered grid for organic-but-distributed coverage
+    const cols = 7, rows = 5;
+    const cellW = W / cols, cellH = H / rows;
+    const placements = [];
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            // skip a few cells near the title center for breathing room
+            const cx = (c + 0.5) * cellW;
+            const cy = (r + 0.5) * cellH;
+            const inCenter = Math.abs(cx - W/2) < cellW * 1.2 && Math.abs(cy - H/2) < cellH * 0.7;
+            if (inCenter && rnd() < 0.65) continue;
 
-        flowers.forEach(flower => {
-            const fLeft = parseFloat(flower.style.getPropertyValue('--fleft')) / 100 * homeW;
-            const fTop = parseFloat(flower.style.getPropertyValue('--ftop')) / 100 * homeH;
-
-            const dx = mouseX - (homeRect.left + fLeft);
-            const dy = mouseY - (homeRect.top + fTop);
-            const dist = Math.sqrt(dx * dx + dy * dy) + 300;
-
-            // Flowers tilt toward cursor with natural limits
-            const maxRotY = 22; // left-right turn (degrees)
-            const maxRotX = 12; // up-down nod
-
-            // Target rotation proportional to mouse offset, dampened by distance
-            const targetRotY = Math.max(-maxRotY, Math.min(maxRotY, dx * 35 / dist));
-            const targetRotX = Math.max(-maxRotX, Math.min(maxRotX, -dy * 20 / dist));
-
-            const s = state.get(flower);
-            // Smooth interpolation (ease toward target)
-            s.y += (targetRotY - s.y) * 0.10;
-            s.x += (targetRotX - s.x) * 0.10;
-
-            flower.style.setProperty('--rotX', s.x.toFixed(2) + 'deg');
-            flower.style.setProperty('--rotY', s.y.toFixed(2) + 'deg');
-        });
-
-        requestAnimationFrame(animate);
+            const jitterX = (rnd() - 0.5) * cellW * 0.6;
+            const jitterY = (rnd() - 0.5) * cellH * 0.6;
+            const size = 0.45 + rnd() * 1.2;            // 0.45–1.65×
+            const rot  = (rnd() - 0.5) * 60;            // ±30°
+            const sym  = symbols[Math.floor(rnd() * symbols.length)];
+            const opacity = 0.35 + rnd() * 0.55;
+            const dx = (rnd() - 0.5) * 10;
+            const dy = (rnd() - 0.5) * 10;
+            const animDelay = (rnd() * -14).toFixed(2) + 's';
+            const animDur = (10 + rnd() * 10).toFixed(2) + 's';
+            placements.push({
+                x: cx + jitterX, y: cy + jitterY,
+                size, rot, sym, opacity, dx, dy, animDelay, animDur
+            });
+        }
     }
-    animate();
+
+    const symbolMarkup = placements.map(p => {
+        const path = SYMBOL_PATHS[p.sym];
+        return `<g class="symbol" transform="translate(${p.x.toFixed(1)},${p.y.toFixed(1)}) rotate(${p.rot.toFixed(1)}) scale(${p.size.toFixed(2)})" style="--op:${p.opacity.toFixed(2)}; opacity:${p.opacity.toFixed(2)}; animation: symbolPulse ${p.animDur} ease-in-out ${p.animDelay} infinite;">${path}</g>`;
+    }).join('');
+
+    wrap.innerHTML = `
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="silverGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#f4f4f4"/>
+            <stop offset="35%" stop-color="#c9c9c9"/>
+            <stop offset="60%" stop-color="#7a7a7a"/>
+            <stop offset="100%" stop-color="#cfcfcf"/>
+          </linearGradient>
+        </defs>
+        ${symbolMarkup}
+      </svg>
+    `;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    initSunflowerFollow();
+    // buildSymbolBg(); // disabled — keeping hero clean per user request
     initNavigation();
     initScrollEffects();
     initTiltCards();
     initForm();
     initParallax();
 });
+
+function initCursor_disabled() {
+    return;
+}
 
 function initNavigation() {
     const nav = document.querySelector('.nav');
@@ -633,7 +639,7 @@ function shakeElement(el) { el.style.animation = 'shake 0.5s'; setTimeout(() => 
 
 function initParallax() {
     const homeContent = document.querySelector('.home-content');
-    const sunflowerBg = document.getElementById('sunflowerBg');
+    const symbolBg = document.getElementById('symbolBg');
     let ticking = false;
     window.addEventListener('scroll', () => {
         if (!ticking) {
@@ -647,7 +653,7 @@ function initParallax() {
                         homeContent.style.transform = `translateY(${scrolled * 0.3}px)`;
                     }
                 }
-                if (sunflowerBg) sunflowerBg.style.transform = `translateY(${scrolled * 0.15}px)`;
+                if (symbolBg) symbolBg.style.transform = `translateY(${scrolled * 0.15}px)`;
                 ticking = false;
             });
             ticking = true;
