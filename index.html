@@ -150,30 +150,18 @@ body {
 }
 .photo-card:hover { box-shadow: 0 0 20px rgba(180,180,180,0.08); }
 
-/* ── CARD BORDER RAYS ── */
-.card-ray-svg {
+/* ── METALLIC GLOSS ── */
+.card-gloss {
     position: absolute;
-    inset: -3px;
-    width: calc(100% + 6px);
-    height: calc(100% + 6px);
+    inset: 0;
     pointer-events: none;
-    z-index: 20;
-    overflow: visible;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    border-radius: inherit;
 }
-.ray-path {
-    fill: none;
-    stroke: rgba(220, 220, 220, 0);
-    stroke-width: 3;
-    vector-effect: non-scaling-stroke;
-    stroke-linecap: square;
-    stroke-dasharray: 200;
-    stroke-dashoffset: 200;
-}
-.photo-card:hover .ray-path {
-    stroke: rgba(220, 220, 220, 0.98);
-    stroke-dashoffset: 0;
-    filter: drop-shadow(0 0 4px rgba(255,255,255,1)) drop-shadow(0 0 10px rgba(210,210,210,0.6));
-    transition: stroke-dashoffset 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+.photo-card:hover .card-gloss {
+    opacity: 1;
 }
 .card-inner { padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; text-align: center; }
 .card-glare { position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent); transition: left 0.5s; pointer-events: none; }
@@ -474,7 +462,7 @@ body {
         </div>
         <div class="adventure-layout">
             <div class="adventure-main">
-                <div class="photo-card large placeholder-card" data-tilt><div class="card-inner"><div class="placeholder-icon large"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><p class="placeholder-text">Adventures Loading...</p></div><div class="card-glare"></div></div>
+                <div class="photo-card large placeholder-card" data-tilt><div class="card-inner"><div class="placeholder-icon large"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><p class="placeholder-text">Coming Soon</p></div><div class="card-glare"></div></div>
             </div>
             <div class="adventure-side">
                 <div class="photo-card placeholder-card" data-tilt><div class="card-inner"><div class="placeholder-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div><p class="placeholder-text">Coming Soon</p></div><div class="card-glare"></div></div>
@@ -490,10 +478,10 @@ body {
             <h2 class="section-title">Craft</h2>
         </div>
         <div class="portfolio-list">
-            <div class="portfolio-item" data-hover><span class="portfolio-year">2024</span><h3 class="portfolio-name">Project Alpha</h3><span class="portfolio-type">Photography</span><div class="portfolio-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg></div></div>
-            <div class="portfolio-item" data-hover><span class="portfolio-year">2024</span><h3 class="portfolio-name">Urban Fragments</h3><span class="portfolio-type">Visual Design</span><div class="portfolio-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg></div></div>
-            <div class="portfolio-item" data-hover><span class="portfolio-year">2023</span><h3 class="portfolio-name">Silent Waves</h3><span class="portfolio-type">Film</span><div class="portfolio-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg></div></div>
-            <div class="portfolio-item" data-hover><span class="portfolio-year">2023</span><h3 class="portfolio-name">Memory Lane</h3><span class="portfolio-type">Writing</span><div class="portfolio-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg></div></div>
+            <div class="portfolio-item" data-hover><span class="portfolio-year">2024</span><h3 class="portfolio-name">Coming Soon</h3><span class="portfolio-type">—</span><div class="portfolio-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg></div></div>
+            <div class="portfolio-item" data-hover><span class="portfolio-year">2024</span><h3 class="portfolio-name">Coming Soon</h3><span class="portfolio-type">—</span><div class="portfolio-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg></div></div>
+            <div class="portfolio-item" data-hover><span class="portfolio-year">2023</span><h3 class="portfolio-name">Coming Soon</h3><span class="portfolio-type">—</span><div class="portfolio-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg></div></div>
+            <div class="portfolio-item" data-hover><span class="portfolio-year">2023</span><h3 class="portfolio-name">Coming Soon</h3><span class="portfolio-type">—</span><div class="portfolio-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg></div></div>
         </div>
     </section>
 
@@ -625,7 +613,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavigation();
     initScrollEffects();
     initTiltCards();
-    initCardBorderRays();
+    initMetallicCards();
     initForm();
     initParallax();
 });
@@ -669,30 +657,44 @@ function initTiltCards() {
     // replaced by border ray effect
 }
 
-function initCardBorderRays() {
-    const ns = 'http://www.w3.org/2000/svg';
+function initMetallicCards() {
     document.querySelectorAll('.photo-card').forEach(card => {
-        const svg = document.createElementNS(ns, 'svg');
-        svg.setAttribute('class', 'card-ray-svg');
-        svg.setAttribute('viewBox', '0 0 100 100');
-        svg.setAttribute('preserveAspectRatio', 'none');
-        svg.setAttribute('aria-hidden', 'true');
+        // Create gloss overlay div
+        const gloss = document.createElement('div');
+        gloss.className = 'card-gloss';
+        card.appendChild(gloss);
 
-        // Left ray: top-center → top-left → left side → bottom-left → bottom-center
-        const left = document.createElementNS(ns, 'path');
-        left.setAttribute('class', 'ray-path');
-        left.setAttribute('d', 'M 50,0 L 0,0 L 0,100 L 50,100');
-        left.setAttribute('pathLength', '200');
+        card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+            // Mouse position as 0–100% within the card
+            const x = ((e.clientX - rect.left) / rect.width)  * 100;
+            const y = ((e.clientY - rect.top)  / rect.height) * 100;
 
-        // Right ray: top-center → top-right → right side → bottom-right → bottom-center
-        const right = document.createElementNS(ns, 'path');
-        right.setAttribute('class', 'ray-path');
-        right.setAttribute('d', 'M 50,0 L 100,0 L 100,100 L 50,100');
-        right.setAttribute('pathLength', '200');
+            // Primary specular: tight bright spot following cursor
+            // Secondary sheen: wide diagonal sweep across the card
+            // Together they simulate a metallic surface catching light
+            gloss.style.background = `
+                radial-gradient(
+                    circle at ${x}% ${y}%,
+                    rgba(255,255,255,0.22)  0%,
+                    rgba(220,215,200,0.13) 18%,
+                    rgba(180,175,165,0.06) 38%,
+                    transparent            62%
+                ),
+                linear-gradient(
+                    ${108 + x * 0.4}deg,
+                    transparent                      0%,
+                    rgba(210,205,195,0.04)           28%,
+                    rgba(255,252,240,0.13)           ${x * 0.6 + 32}%,
+                    rgba(200,195,185,0.06)           ${x * 0.6 + 48}%,
+                    transparent                      100%
+                )
+            `;
+        });
 
-        svg.appendChild(left);
-        svg.appendChild(right);
-        card.appendChild(svg);
+        card.addEventListener('mouseleave', () => {
+            gloss.style.background = 'none';
+        });
     });
 }
 
