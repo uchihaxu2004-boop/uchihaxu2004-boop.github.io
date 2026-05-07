@@ -339,6 +339,36 @@ body {
     .member-container { grid-template-columns: 1fr; gap: 1.25rem; }
     .btn-submit { width: 100%; }
 }
+
+/* ── SUNFLOWER BG ── */
+.sunflower-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
+}
+.sf-img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.sunflower-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 52%,
+        rgba(10,10,10,0.0) 0%,
+        rgba(10,10,10,0.0) 40%,
+        rgba(10,10,10,0.35) 75%,
+        rgba(10,10,10,0.65) 100%
+    );
+    pointer-events: none;
+}
+
 </style>
 </head>
 <body>
@@ -371,6 +401,10 @@ body {
     <section id="home" class="section home">
         <div class="symbol-bg" id="symbolBg" aria-hidden="true">
           <!-- SVG injected by JS -->
+        </div>
+        <div class="sunflower-bg" aria-hidden="true">
+            <img src="sunflowers.png" class="sf-img" alt="">
+            <div class="sunflower-vignette"></div>
         </div>
         <div class="noise-overlay"></div>
         <div class="home-content">
