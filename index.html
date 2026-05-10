@@ -248,24 +248,44 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
-    background: linear-gradient(150deg, #d8d8d5 0%, #c8c8c5 30%, #d2d2ce 60%, #c0c0bc 100%);
+    /* brushed aluminium: tight repeating highlight + base gradient */
+    background:
+        repeating-linear-gradient(
+            92deg,
+            rgba(255,255,255,0)    0px,
+            rgba(255,255,255,0.06) 1px,
+            rgba(255,255,255,0)    2px,
+            rgba(255,255,255,0)    5px
+        ),
+        linear-gradient(
+            160deg,
+            #e2e2e0 0%,
+            #c8c8c6 18%,
+            #d8d8d6 32%,
+            #b8b8b6 48%,
+            #cecece 62%,
+            #a8a8a6 78%,
+            #d4d4d2 100%
+        );
     border-radius: 3px 3px 6px 6px;
     box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.75),
-        inset 1px 0 0 rgba(255,255,255,0.4),
-        inset -1px 0 0 rgba(0,0,0,0.12),
-        0 8px 32px rgba(0,0,0,0.55),
-        0 2px 6px rgba(0,0,0,0.35);
-    padding: 6px 6px 0 6px;
+        inset 0 1.5px 0 rgba(255,255,255,0.85),
+        inset 1px 0   0 rgba(255,255,255,0.45),
+        inset -1px 0  0 rgba(0,0,0,0.18),
+        inset 0 -2px 0 rgba(0,0,0,0.22),
+        0 10px 40px rgba(0,0,0,0.6),
+        0 2px 8px rgba(0,0,0,0.4);
+    padding: 7px 7px 0 7px;
 }
 /* photo window */
 .polaroid-window {
     flex: 1;
     background:
-        linear-gradient(135deg, rgba(180,175,165,0.08) 0%, transparent 55%),
-        radial-gradient(ellipse at 35% 30%, rgba(220,215,200,0.06) 0%, transparent 65%),
+        linear-gradient(135deg, rgba(160,155,145,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 35% 30%, rgba(210,205,195,0.05) 0%, transparent 65%),
         #0f0f0f;
-    border: 1px solid rgba(100,100,95,0.25);
+    border: 1px solid rgba(80,80,76,0.3);
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.5), inset 0 0 1px rgba(0,0,0,0.8);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -274,22 +294,23 @@ body {
 }
 .polaroid-window svg {
     width: 26px; height: 26px;
-    color: rgba(160,155,145,0.55);
+    color: rgba(150,145,138,0.5);
 }
 .polaroid-window .film-label {
-    color: rgba(150,145,135,0.6);
+    color: rgba(145,140,132,0.55);
 }
-/* white caption bar */
+/* caption bar — same brushed metal */
 .polaroid-bar {
     flex-shrink: 0;
-    height: 28px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-top: 1px solid rgba(100,100,98,0.25);
 }
 /* large polaroid */
 .polaroid-card.large .polaroid-frame { padding: 10px 10px 0 10px; }
-.polaroid-card.large .polaroid-bar { height: 44px; }
+.polaroid-card.large .polaroid-bar { height: 46px; }
 .polaroid-card.large .polaroid-window svg { width: 36px; height: 36px; }
 .card-inner { padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; text-align: center; }
 .card-glare { position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent); transition: left 0.5s; pointer-events: none; }
@@ -300,11 +321,23 @@ body {
 .placeholder-text { font-size: 1rem; color: var(--color-silver); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.5rem; }
 .placeholder-sub { display: none; }
 
-.gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1400px; margin: 0 auto; }
+/* single film strip for Log */
+.film-strip-wrap { max-width: 1400px; margin: 0 auto; width: 100%; }
+.film-strip-single { display: flex; flex-direction: column; width: 100%; background: linear-gradient(160deg,#2a2a2a 0%,#1a1a1a 40%,#222 100%); border-radius: 5px; border: 1.5px solid #555; box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 0 rgba(0,0,0,0.6), 0 6px 32px rgba(0,0,0,0.6); overflow: hidden; }
+.film-sprocket-row { flex-shrink: 0; height: 22px; background: linear-gradient(180deg,#1c1c1c,#141414); border-bottom: 1px solid #444; display: flex; align-items: center; padding: 0 8px; gap: 0; }
+.film-sprocket-row.bot { border-top: 1px solid #444; border-bottom: none; }
+.film-sprocket-row .sprocket { width: 12px; height: 9px; flex-shrink: 0; margin-right: 9px; }
+.film-frames-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+.film-frame-cell { border-right: 1.5px solid #333; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; min-height: 300px; background: linear-gradient(135deg,rgba(200,200,190,0.03) 0%,transparent 60%), radial-gradient(ellipse at 30% 30%,rgba(220,215,200,0.04) 0%,transparent 65%), #111; position: relative; }
+.film-frame-cell:last-child { border-right: none; }
+.film-frame-cell::before { content: ''; position: absolute; inset: 6px; border: 1px solid rgba(255,255,255,0.06); pointer-events: none; }
+.film-frame-cell svg { width: 28px; height: 28px; color: rgba(190,185,175,0.4); }
+.film-frame-num { position: absolute; top: 10px; left: 10px; font-family: var(--font-body); font-size: 0.5rem; color: rgba(185,180,170,0.35); letter-spacing: 0.2em; }
 
-.daily { background: var(--color-bg); }
+.daily { background: var(--color-bg); min-height: auto; }
 .adventure { background: var(--color-bg); }
-.adventure-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+.adventure-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; max-width: 1400px; margin: 0 auto; }
 .adventure-main .photo-card { min-height: 500px; }
 .adventure-side { display: flex; flex-direction: column; gap: 1.5rem; }
 .adventure-side .photo-card { flex: 1; }
@@ -574,38 +607,39 @@ body {
             <span class="section-number">01</span>
             <h2 class="section-title">Log</h2>
         </div>
-        <div class="gallery-grid" id="daily-grid">
-            <div class="photo-card film-card placeholder-card" data-tilt>
-                <div class="film-frame">
-                    <div class="film-strip-top"><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div></div>
-                    <div class="film-exposure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p class="film-label">Coming Soon</p></div>
-                    <div class="film-strip-bot"><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div></div>
+        <div class="film-strip-wrap">
+            <div class="film-strip-single">
+                <!-- top sprockets -->
+                <div class="film-sprocket-row">
+                    <div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div>
                 </div>
-                <div class="card-gloss"></div>
-            </div>
-            <div class="photo-card film-card placeholder-card" data-tilt>
-                <div class="film-frame">
-                    <div class="film-strip-top"><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div></div>
-                    <div class="film-exposure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p class="film-label">Coming Soon</p></div>
-                    <div class="film-strip-bot"><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div></div>
+                <!-- 4 frames -->
+                <div class="film-frames-row">
+                    <div class="film-frame-cell">
+                        <span class="film-frame-num">01</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        <p class="film-label">Coming Soon</p>
+                    </div>
+                    <div class="film-frame-cell">
+                        <span class="film-frame-num">02</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        <p class="film-label">Coming Soon</p>
+                    </div>
+                    <div class="film-frame-cell">
+                        <span class="film-frame-num">03</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        <p class="film-label">Coming Soon</p>
+                    </div>
+                    <div class="film-frame-cell">
+                        <span class="film-frame-num">04</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        <p class="film-label">Coming Soon</p>
+                    </div>
                 </div>
-                <div class="card-gloss"></div>
-            </div>
-            <div class="photo-card film-card placeholder-card" data-tilt>
-                <div class="film-frame">
-                    <div class="film-strip-top"><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div></div>
-                    <div class="film-exposure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p class="film-label">Coming Soon</p></div>
-                    <div class="film-strip-bot"><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div></div>
+                <!-- bottom sprockets -->
+                <div class="film-sprocket-row bot">
+                    <div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div>
                 </div>
-                <div class="card-gloss"></div>
-            </div>
-            <div class="photo-card film-card placeholder-card" data-tilt>
-                <div class="film-frame">
-                    <div class="film-strip-top"><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div></div>
-                    <div class="film-exposure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p class="film-label">Coming Soon</p></div>
-                    <div class="film-strip-bot"><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div></div>
-                </div>
-                <div class="card-gloss"></div>
             </div>
         </div>
     </section>
