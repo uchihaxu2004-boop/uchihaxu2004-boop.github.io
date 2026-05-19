@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大軍的個人網站 | Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+
+<!-- GSAP + Flip plugin (for FlipReveal-style filter transitions) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+
+<style>
+:root {
+    --color-bg: #0a0a0a;
+    --color-bg-alt: #111111;
+    --color-white: #ffffff;
+    --color-silver: #c0c0c0;
+    --color-silver-dim: #8a8a8a;
+    --color-accent: #e8e8e8;
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-cn: 'Noto Serif TC', serif;
+    --transition-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+    font-family: var(--font-display);
+    background: var(--color-bg);
+    color: var(--color-white);
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* All Latin / numeric UI labels use Playfair Display — including spots that
+   previously used SF Mono or Inter (per design feedback: "all numbers + English
+   should use the title font"). Chinese still uses Noto Serif TC. */
+.photo-num,
+.cal-weekday,
+.cal-footer-hint,
+.cal-clear,
+.active-filter-count,
+.photo-day,
+.footer-year,
+.btn-submit,
+.upload-hint code {
+    font-family: var(--font-display) !important;
+}
+
+/* Noise Overlay */
+.noise-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 9000; opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* ── NAV (reused from design system) ── */
+.nav { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1.5rem 3rem; transition: background 0.4s, backdrop-filter 0.4s; background: rgba(10,10,10,0.85); backdrop-filter: blur(20px); }
+.nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
+.logo { text-decoration: none; display: flex; flex-direction: column; align-items: flex-start; }
+.logo-text { font-family: var(--font-display); font-size: 0.875rem; font-weight: 400; color: var(--color-silver); letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.3s; }
+.logo:hover .logo-text { color: var(--color-white); }
+.nav-links { display: flex; list-style: none; gap: 2.5rem; align-items: center; }
+.nav-links a { text-decoration: none; font-family: var(--font-display); color: var(--color-silver); font-size: 0.875rem; font-weight: 400; text-transform: uppercase; letter-spacing: 0.15em; transition: color 0.3s; }
+.nav-links a:hover { color: var(--color-white); }
+.nav-links a.active { color: var(--color-white); }
+.nav-cta { position: relative; overflow: hidden; border: 1px solid var(--color-silver); padding: 0.5rem 1.1rem; font-size: 0.95rem; font-weight: 600; border-radius: 6px; white-space: nowrap; text-align: center; transition: border-color 0.3s var(--transition-smooth), color 0.3s; }
+.nav-cta::before { content: ''; position: absolute; inset: -1px; border-radius: inherit; background: linear-gradient(135deg, #e2e2e0 0%, #c8c8c6 18%, #d8d8d6 32%, #b8b8b6 48%, #cecece 62%, #a8a8a6 78%, #d4d4d2 100%); opacity: 0; transition: opacity 0.2s var(--transition-smooth); pointer-events: none; }
+.nav-cta span { position: relative; z-index: 1; }
+.nav-cta .cta-default { transition: opacity 0.15s; }
+.nav-cta .cta-hover { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); opacity: 0; transition: opacity 0.15s; white-space: nowrap; }
+.nav-cta:hover .cta-default { opacity: 0; }
+.nav-cta:hover .cta-hover { opacity: 1; }
+.nav-cta:hover { color: #111 !important; border-color: #b8b8b6; }
+.nav-cta:hover::before { opacity: 1; }
+.hamburger { display: none; flex-direction: column; gap: 6px; cursor: pointer; }
+.hamburger span { width: 28px; height: 1px; background: var(--color-white); transition: all 0.3s; }
+.hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.mobile-menu { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: var(--color-bg); z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; opacity: 0; pointer-events: none; transition: opacity 0.4s; }
+.mobile-menu.active { opacity: 1; pointer-events: all; }
+.mobile-menu a { font-family: var(--font-display); font-size: 2rem; color: var(--color-white); text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; }
+
+/* ── LOG PAGE ── */
+.log-page {
+    padding: 8rem 3rem 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* Top filter bar: title | pills | calendar btn */
+.filter-bar {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.5rem 1.5rem;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.log-title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex-shrink: 0;
+}
+.log-title-num {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--color-silver-dim);
+    text-transform: uppercase;
+}
+.log-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6vw, 4.75rem);
+    font-weight: 400;
+    color: var(--color-white);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+/* Pills scroller */
+.pills-wrap {
+    position: relative;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-left: 1px solid rgba(255,255,255,0.15);
+    border-right: 1px solid rgba(255,255,255,0.15);
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+}
+.pills-nav {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--color-silver);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.25s, color 0.25s, opacity 0.25s, transform 0.2s;
+}
+.pills-nav:hover:not(:disabled) { background: rgba(255,255,255,0.12); color: var(--color-white); }
+.pills-nav:active:not(:disabled) { transform: scale(0.92); }
+.pills-nav:disabled { opacity: 0; pointer-events: none; width: 0; padding: 0; border: none; margin: 0; transition: width 0.3s, opacity 0.2s; }
+.pills-nav svg { width: 14px; height: 14px; }
+
+.pills-track-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+.pills-track {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    padding: 0.25rem 0;
+    -webkit-overflow-scrolling: touch;
+}
+.pills-track::-webkit-scrollbar { display: none; }
+
+.pill {
+    flex: 0 0 auto;
+    padding: 0.55rem 1.15rem;
+    background: transparent;
+    border: none;
+    border-radius: 999px;
+    color: var(--color-silver);
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.25s, background 0.25s;
+    user-select: none;
+}
+.pill:hover { color: var(--color-white); background: rgba(255,255,255,0.06); }
+.pill.active {
+    background: transparent;
+    color: var(--color-white);
+    box-shadow: none;
+}
+.pill.active:hover { color: var(--color-white); background: rgba(255,255,255,0.06); }
+.pill .pill-sep {
+    display: inline-block;
+    margin: 0 0.3em;
+    opacity: 0.5;
+}
+.pill.active .pill-sep { opacity: 0.6; }
+
+/* Edge fades on pills track */
+.pills-track-wrap::before,
+.pills-track-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 32px;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.pills-track-wrap::before { left: 0; background: linear-gradient(90deg, var(--color-bg) 0%, rgba(10,10,10,0) 100%); }
+.pills-track-wrap::after  { right: 0; background: linear-gradient(-90deg, var(--color-bg) 0%, rgba(10,10,10,0) 100%); }
+.pills-track-wrap.fade-left::before { opacity: 1; }
+.pills-track-wrap.fade-right::after { opacity: 1; }
+
+/* Calendar button */
+.cal-btn {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: var(--color-silver);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.25s, border-color 0.25s, color 0.25s, transform 0.2s;
+    position: relative;
+}
+.cal-btn:hover { color: var(--color-white); border-color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.08); }
+.cal-btn.open {
+    background: var(--color-white);
+    border-color: var(--color-white);
+    color: #0a0a0a;
+}
+.cal-btn svg { width: 20px; height: 20px; }
+.cal-btn .cal-dot {
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 6px; height: 6px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--color-bg);
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 0.25s, transform 0.25s;
+}
+.cal-btn.has-selection .cal-dot { opacity: 1; transform: scale(1); }
+.cal-btn.open .cal-dot { background: #0a0a0a; box-shadow: 0 0 0 2px var(--color-white); }
+
+/* ── CALENDAR POPOVER ── */
+.cal-popover {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    right: 0;
+    width: 320px;
+    background: linear-gradient(180deg, #161616 0%, #0e0e0e 100%);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 1.25rem 1.1rem 1.1rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.03);
+    z-index: 50;
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+    pointer-events: none;
+    transition: opacity 0.22s var(--transition-smooth), transform 0.22s var(--transition-smooth);
+}
+.cal-popover.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+}
+.cal-ym {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    color: var(--color-white);
+    letter-spacing: 0.08em;
+}
+.cal-select-wrap { position: relative; }
+.cal-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--color-white);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 1.6rem 0.35rem 0.65rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.25s, background 0.25s;
+}
+.cal-select:hover { border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.05); }
+.cal-select:focus { outline: none; border-color: var(--color-white); }
+.cal-select option { background: #1a1a1a; color: var(--color-white); }
+.cal-select-wrap::after {
+    content: '';
+    position: absolute;
+    right: 8px; top: 50%;
+    width: 6px; height: 6px;
+    border-right: 1px solid var(--color-silver);
+    border-bottom: 1px solid var(--color-silver);
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+}
+
+.cal-nav-btns { display: flex; gap: 0.3rem; }
+.cal-nav-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--color-silver);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.cal-nav-btn:hover:not(:disabled) { color: var(--color-white); border-color: var(--color-white); background: rgba(255,255,255,0.08); }
+.cal-nav-btn:disabled { opacity: 0.25; cursor: default; }
+.cal-nav-btn svg { width: 12px; height: 12px; }
+
+.cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 0.4rem;
+}
+.cal-weekday {
+    text-align: center;
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--color-silver-dim);
+    text-transform: uppercase;
+    padding: 0.3rem 0;
+}
+
+.cal-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+.cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    color: var(--color-silver);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, border-color 0.18s;
+    user-select: none;
+}
+.cal-day:hover:not(.disabled):not(.empty) {
+    background: rgba(255,255,255,0.06);
+    color: var(--color-white);
+    border-color: rgba(255,255,255,0.18);
+}
+.cal-day.today {
+    color: var(--color-white);
+    font-weight: 500;
+}
+.cal-day.today::after {
+    content: '';
+    width: 4px; height: 4px;
+    background: var(--color-white);
+    border-radius: 50%;
+    position: absolute;
+    margin-top: 22px;
+}
+.cal-day {
+    position: relative;
+}
+.cal-day.has-photos {
+    color: var(--color-white);
+}
+.cal-day.has-photos::before {
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    width: 3px; height: 3px;
+    background: var(--color-silver);
+    border-radius: 50%;
+    transform: translateX(-50%);
+}
+.cal-day.selected {
+    background: var(--color-white);
+    color: #0a0a0a;
+    border-color: var(--color-white);
+}
+.cal-day.selected.has-photos::before { background: #0a0a0a; }
+.cal-day.disabled {
+    color: rgba(255,255,255,0.12);
+    cursor: not-allowed;
+}
+.cal-day.empty { visibility: hidden; }
+
+/* ── MONTH GRID (year+month picker) ── */
+.cal-months {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 0.25rem;
+}
+.cal-month-btn {
+    appearance: none;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--color-silver);
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.65rem 0.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.22s, color 0.22s, border-color 0.22s, transform 0.18s;
+}
+.cal-month-btn:hover:not(:disabled) {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.25);
+    color: var(--color-white);
+}
+.cal-month-btn:active:not(:disabled) { transform: scale(0.96); }
+.cal-month-btn.selected {
+    background: var(--color-white);
+    color: #0a0a0a;
+    border-color: var(--color-white);
+}
+.cal-month-btn:disabled {
+    color: rgba(255,255,255,0.14);
+    cursor: not-allowed;
+}
+.cal-header { justify-content: space-between; }
+.cal-header .cal-ym { flex: 1; justify-content: center; }
+.cal-header .cal-ym .cal-select { padding: 0.4rem 1.8rem 0.4rem 0.85rem; font-size: 0.9rem; letter-spacing: 0.1em; }
+
+.cal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.9rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    gap: 0.5rem;
+}
+.cal-footer-hint {
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--color-silver-dim);
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.cal-clear {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.18);
+    color: var(--color-silver);
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.cal-clear:hover { color: var(--color-white); border-color: var(--color-white); background: rgba(255,255,255,0.05); }
+
+/* ── ACTIVE FILTER LABEL ── */
+.active-filter {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-display);
+    color: var(--color-silver-dim);
+    font-size: 0.78rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    min-height: 1rem;
+}
+.active-filter-label { opacity: 0.6; }
+.active-filter-value {
+    color: var(--color-white);
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-style: normal;
+}
+.active-filter-count {
+    color: var(--color-silver-dim);
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+}
+
+/* ── GALLERY (3-column) ── */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    position: relative;
+}
+.gallery-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Date-stamp placeholder (replaces the actual photo while we wait for assets) */
+.photo-stamp {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    text-align: center;
+    padding: 1rem;
+    background:
+        radial-gradient(ellipse at 30% 25%, rgba(255,255,255,0.04), transparent 60%),
+        radial-gradient(ellipse at 70% 80%, rgba(255,255,255,0.025), transparent 65%);
+}
+.photo-stamp::before,
+.photo-stamp::after {
+    content: '';
+    position: absolute;
+    background: rgba(255,255,255,0.04);
+}
+.photo-stamp::before { left: 0; right: 0; top: 50%; height: 1px; }
+.photo-stamp::after  { top: 0; bottom: 0; left: 50%; width: 1px; }
+.stamp-date {
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 2.2vw, 1.75rem);
+    font-weight: 400;
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 0.12em;
+    line-height: 1.2;
+    z-index: 1;
+    white-space: nowrap;
+}
+.stamp-no {
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.35em;
+    z-index: 1;
+}
+.stamp-tag {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.28);
+    letter-spacing: 0.35em;
+    z-index: 1;
+    white-space: nowrap;
+}
+
+.photo-item {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--color-bg-alt);
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: 0 6px 22px rgba(0,0,0,0.45);
+    cursor: pointer;
+}
+.photo-item.is-hidden { display: none; }
+
+.photo-aspect {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+.photo-aspect img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transform: scale(1.04);
+    transition: opacity 1s var(--transition-smooth), transform 8s var(--transition-smooth);
+    display: block;
+}
+.photo-item.loaded .photo-aspect img.in-view {
+    opacity: 1;
+    transform: scale(1);
+}
+.photo-item:hover .photo-aspect img.in-view { transform: scale(1.06); transition: transform 1.6s var(--transition-smooth); }
+
+.photo-meta {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 0.9rem 1rem 0.85rem;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 100%);
+    color: var(--color-white);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 0.75rem;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.35s var(--transition-smooth), transform 0.35s var(--transition-smooth);
+    pointer-events: none;
+}
+.photo-item:hover .photo-meta { opacity: 1; transform: translateY(0); }
+.photo-date {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+.photo-day {
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--color-silver);
+    text-transform: uppercase;
+}
+
+/* Film perforation accent on each photo (subtle, top-left) */
+.photo-num {
+    position: absolute;
+    top: 10px; left: 12px;
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+    color: rgba(255,255,255,0.55);
+    text-transform: uppercase;
+    background: rgba(0,0,0,0.35);
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    backdrop-filter: blur(4px);
+    z-index: 2;
+}
+
+/* Empty state */
+.gallery-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 5rem 2rem;
+    color: var(--color-silver-dim);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    display: none;
+}
+.gallery-empty.show { display: block; }
+
+/* ── MONTH STEP NAV (replaces footer) ── */
+.month-step {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 5rem 0 1rem;
+    padding: 2rem 0 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+.step-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--color-silver);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 0.5rem;
+    text-align: left;
+    transition: color 0.3s var(--transition-smooth);
+}
+.step-btn.right {
+    justify-content: flex-end;
+    text-align: right;
+}
+.step-btn:hover:not(:disabled) { color: var(--color-white); }
+.step-btn:disabled { opacity: 0.25; cursor: default; }
+
+.step-arrow {
+    width: 22px; height: 22px;
+    flex-shrink: 0;
+}
+
+.step-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+}
+.step-text.right { align-items: flex-end; }
+.step-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.28em;
+    color: var(--color-silver-dim);
+    transition: color 0.3s;
+}
+.step-btn:hover:not(:disabled) .step-label { color: var(--color-silver); }
+.step-target {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2.2vw, 1.7rem);
+    letter-spacing: 0.1em;
+    color: var(--color-white);
+    text-transform: uppercase;
+    line-height: 1;
+}
+.step-btn:disabled .step-target { color: var(--color-silver-dim); }
+
+.step-divider {
+    width: 1px;
+    background: rgba(255,255,255,0.08);
+    align-self: stretch;
+}
+
+.footer-min {
+    position: relative;
+    height: 6rem;
+}
+.footer-min .footer-line {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-silver-dim), transparent);
+    opacity: 0.3;
+}
+
+@media (max-width: 768px) {
+    .month-step {
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        gap: 0.5rem;
+    }
+    .step-btn { padding: 1rem 0.25rem; gap: 0.6rem; }
+    .step-label { font-size: 0.6rem; letter-spacing: 0.22em; }
+    .step-target { font-size: 1.1rem; }
+    .step-arrow { width: 20px; height: 20px; }
+}
+
+/* ── FOOTER (legacy, kept for reference but unused) ── */
+.footer { padding: 4rem 3rem; background: var(--color-bg); border-top: 1px solid rgba(255, 255, 255, 0.05); position: relative; margin-top: 4rem; }
+.footer-content { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 2rem; }
+.social-row { display: flex; list-style: none; gap: 2.25rem; padding: 0; margin: 0; align-items: center; }
+.social-link { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; color: var(--color-silver); text-decoration: none; border-radius: 50%; transition: color 0.3s var(--transition-smooth), transform 0.3s var(--transition-smooth), background 0.3s; }
+.social-link svg { width: 22px; height: 22px; display: block; }
+.social-link:hover { color: var(--color-bg); background: var(--color-white); transform: translateY(-3px); }
+.footer-year { font-size: 0.7rem; color: var(--color-silver-dim); text-transform: uppercase; letter-spacing: 0.3em; }
+.footer-line { position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--color-silver-dim), transparent); opacity: 0.3; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+    .log-page { padding: 7rem 1.75rem 3rem; }
+    .filter-bar { gap: 1.25rem; }
+    .gallery { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .gallery-col { gap: 1rem; }
+}
+@media (max-width: 768px) {
+    .nav { padding: 1rem 1.25rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .log-page { padding: 6rem 1.25rem 2rem; }
+    .filter-bar {
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "title cal"
+            "pills pills";
+        gap: 1rem 0.75rem;
+        margin-bottom: 2rem;
+    }
+    .log-title-block { grid-area: title; }
+    .pills-wrap { grid-area: pills; }
+    .cal-btn { grid-area: cal; align-self: end; }
+    .log-title { font-size: 2.75rem; }
+    .pills-nav { display: none; }
+    .gallery { grid-template-columns: 1fr; gap: 1rem; }
+    .gallery-col { gap: 1rem; }
+    .cal-popover { width: 290px; right: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="noise-overlay"></div>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" class="mobile-link">Home</a>
+    <a href="log.html" class="mobile-link">Log</a>
+    <a href="adventures.html" class="mobile-link">Adventures</a>
+    <a href="craft.html" class="mobile-link">Craft</a>
+    <a href="reach.html" class="mobile-link">Reach</a>
+    <a href="join.html" class="mobile-link">Join</a>
+</div>
+
+<nav class="nav">
+    <div class="nav-container">
+        <a href="index.html" class="logo">
+            <span class="logo-text">Home</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="log.html" class="active">Log</a></li>
+            <li><a href="adventures.html">Adventures</a></li>
+            <li><a href="craft.html">Craft</a></li>
+            <li><a href="reach.html">Reach</a></li>
+            <li><a href="join.html" class="nav-cta"><span class="cta-default">Join</span><span class="cta-hover">V I P</span></a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+</nav>
+
+<main class="log-page" data-screen-label="01 Log">
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+        <div class="log-title-block">
+            <h1 class="log-title">Log</h1>
+        </div>
+
+        <div class="pills-wrap">
+            <button class="pills-nav" id="pillsPrev" aria-label="Scroll filters left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <div class="pills-track-wrap" id="pillsTrackWrap">
+                <div class="pills-track" id="pillsTrack" role="tablist">
+                    <!-- pills injected by JS -->
+                </div>
+            </div>
+            <button class="pills-nav" id="pillsNext" aria-label="Scroll filters right">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+        </div>
+
+        <div style="position: relative;">
+            <button class="cal-btn" id="calBtn" aria-label="Pick a date">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="5" width="18" height="16" rx="2"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                    <line x1="8" y1="3" x2="8" y2="7"/>
+                    <line x1="16" y1="3" x2="16" y2="7"/>
+                </svg>
+                <span class="cal-dot"></span>
+            </button>
+
+            <!-- Calendar popover -->
+            <div class="cal-popover" id="calPopover" role="dialog" aria-label="Date picker">
+                <div class="cal-header">
+                    <button class="cal-nav-btn" id="calPrev" aria-label="Previous year">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    </button>
+                    <div class="cal-ym">
+                        <div class="cal-select-wrap">
+                            <select class="cal-select" id="calYear" aria-label="Year"></select>
+                        </div>
+                    </div>
+                    <button class="cal-nav-btn" id="calNext" aria-label="Next year">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+                <div class="cal-months" id="calMonths"></div>
+                <div class="cal-footer">
+                    <span class="cal-footer-hint">Since 2004 · 09 · 27</span>
+                    <button class="cal-clear" id="calClear">All</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active filter label -->
+    <div class="active-filter">
+        <span class="active-filter-value" id="activeFilterValue">All</span>
+        <span class="active-filter-count" id="activeFilterCount">—</span>
+    </div>
+
+    <!-- Gallery -->
+    <div class="gallery" id="gallery">
+        <!-- columns injected by JS -->
+    </div>
+    <div class="gallery-empty" id="galleryEmpty">Still building this</div>
+
+    <!-- Month step nav (replaces footer) -->
+    <nav class="month-step" aria-label="Month navigation">
+        <button class="step-btn" id="stepNext" type="button">
+            <svg class="step-arrow left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 6 9 12 15 18"/></svg>
+            <span class="step-text">
+                <span class="step-label">Next month</span>
+                <span class="step-target" id="stepNextTarget">—</span>
+            </span>
+        </button>
+        <span class="step-divider" aria-hidden="true"></span>
+        <button class="step-btn right" id="stepPrev" type="button">
+            <span class="step-text right">
+                <span class="step-label">Previous month</span>
+                <span class="step-target" id="stepPrevTarget">—</span>
+            </span>
+            <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+    </nav>
+
+</main>
+
+<footer class="footer-min" aria-hidden="true">
+    <div class="footer-line"></div>
+</footer>
+
+<script>
+/* ====================================================================
+   Data: sample photos. Each photo has id, date, aspect ratio, seed for
+   placeholder image source. Dates span ~2024-04 → today; sorted newest
+   first ("更新日期" descending).
+   ==================================================================== */
+const MIN_DATE = new Date(2004, 8, 27); // 2004/09/27 — lower bound
+
+// ── 新增照片：在陣列裡加一行即可 ──────────────────────────────
+// photo('YYYY-M-D-號碼', true/false)
+//   檔名格式：年-月-日-號碼，例如 2026-5-12-1
+//   第二個參數：true = 直式，false = 橫式（不填預設直式）
+function photo(filename, isPortrait = true) {
+    const parts = filename.split('-').map(Number);
+    const [y, m, d] = parts;
+    return {
+        id: filename,
+        date: new Date(y, m - 1, d),
+        isPortrait,
+        src: `images/log/${filename}.jpg`,
+        w: isPortrait ? 600 : 900,
+        h: isPortrait ? 900 : 600,
+    };
+}
+
+const PHOTOS = [
+    photo('2026-05-16-1', true),
+].sort((a, b) => b.date - a.date);
+
+/* ====================================================================
+   State
+   ==================================================================== */
+const state = {
+    filterMode: 'all',      // 'all' | 'month' | 'day'
+    filterKey: null,        // 'YYYY-MM' for month, 'YYYY-MM-DD' for day
+    calYear: new Date().getFullYear(),
+    calMonth: new Date().getMonth(),
+    selectedDay: null,      // Date or null
+};
+
+/* ====================================================================
+   Helpers
+   ==================================================================== */
+const pad2 = (n) => String(n).padStart(2, '0');
+const MONTH_LABELS_EN = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const MONTH_LABELS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function dateKey(d)       { return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
+function monthKey(d)      { return `${d.getFullYear()}-${pad2(d.getMonth()+1)}`; }
+function monthKeyYM(y, m) { return `${y}-${pad2(m+1)}`; }
+function sameDay(a, b)    { return a && b && a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
+function isBeforeMinDate(y, m, d) {
+    const test = new Date(y, m, d);
+    return test < MIN_DATE;
+}
+
+const PHOTO_DAYS_SET = new Set(PHOTOS.map(p => dateKey(p.date)));
+
+/* ====================================================================
+   Pills (month filters)
+   ==================================================================== */
+function buildPills() {
+    const track = document.getElementById('pillsTrack');
+    track.innerHTML = '';
+
+    // "All" pill
+    const allPill = document.createElement('button');
+    allPill.className = 'pill active';
+    allPill.dataset.filter = 'all';
+    allPill.setAttribute('role', 'tab');
+    allPill.textContent = 'All';
+    track.appendChild(allPill);
+
+    // Only months that actually have photos, newest first.
+    const monthsWithPhotos = [...new Set(PHOTOS.map(p => monthKey(p.date)))]
+        .sort((a, b) => b.localeCompare(a))
+        .map(mk => ({ y: parseInt(mk.split('-')[0]), m: parseInt(mk.split('-')[1]) - 1 }));
+
+    monthsWithPhotos.forEach(({ y, m }) => {
+        const pill = document.createElement('button');
+        pill.className = 'pill';
+        pill.dataset.filter = 'month';
+        pill.dataset.key = monthKeyYM(y, m);
+        pill.setAttribute('role', 'tab');
+        pill.innerHTML = `${y}<span class="pill-sep">·</span>${MONTH_LABELS_EN[m]}`;
+        track.appendChild(pill);
+    });
+
+    track.addEventListener('click', (e) => {
+        const pill = e.target.closest('.pill');
+        if (!pill) return;
+        if (pill.dataset.filter === 'all') {
+            setFilter('all', null);
+        } else {
+            setFilter('month', pill.dataset.key);
+        }
+    });
+}
+
+function updatePillsActive() {
+    document.querySelectorAll('#pillsTrack .pill').forEach(p => {
+        let active = false;
+        if (state.filterMode === 'all' && p.dataset.filter === 'all') active = true;
+        else if (state.filterMode === 'month' && p.dataset.filter === 'month' && p.dataset.key === state.filterKey) active = true;
+        p.classList.toggle('active', active);
+    });
+}
+
+function initPillsNav() {
+    const track = document.getElementById('pillsTrack');
+    const wrap  = document.getElementById('pillsTrackWrap');
+    const prev  = document.getElementById('pillsPrev');
+    const next  = document.getElementById('pillsNext');
+
+    const updateFades = () => {
+        const { scrollLeft, scrollWidth, clientWidth } = track;
+        wrap.classList.toggle('fade-left', scrollLeft > 4);
+        wrap.classList.toggle('fade-right', scrollLeft + clientWidth < scrollWidth - 4);
+        prev.disabled = scrollLeft <= 4;
+        next.disabled = scrollLeft + clientWidth >= scrollWidth - 4;
+    };
+
+    prev.addEventListener('click', () => track.scrollBy({ left: -260, behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left:  260, behavior: 'smooth' }));
+    track.addEventListener('scroll', updateFades, { passive: true });
+    window.addEventListener('resize', updateFades);
+
+    requestAnimationFrame(updateFades);
+}
+
+/* ====================================================================
+   Calendar popover
+   ==================================================================== */
+function buildCalendarStaticParts() {
+    // Year select: from next year down to 2004
+    const ySel = document.getElementById('calYear');
+    const now = new Date();
+    const years = [];
+    for (let y = now.getFullYear() + 1; y >= 2004; y--) years.push(y);
+    ySel.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+}
+
+function renderCalendarDays() {
+    const y = state.calYear;
+    document.getElementById('calYear').value = y;
+
+    const grid = document.getElementById('calMonths');
+    let html = '';
+    for (let m = 0; m < 12; m++) {
+        // Skip months where every day is before MIN_DATE (e.g. Jan–Aug 2004)
+        const lastDayOfMonth = new Date(y, m + 1, 0);
+        if (lastDayOfMonth < MIN_DATE) continue;
+        const mk = monthKeyYM(y, m);
+        const isSelected = (state.filterMode === 'month' && state.filterKey === mk);
+        const classes = ['cal-month-btn'];
+        if (isSelected) classes.push('selected');
+        html += `<button class="${classes.join(' ')}" data-m="${m}">${MONTH_LABELS_EN[m]}</button>`;
+    }
+    grid.innerHTML = html;
+
+    // Disable prev year at the floor
+    const minY = MIN_DATE.getFullYear();
+    document.getElementById('calPrev').disabled = (y <= minY);
+}
+
+function initCalendar() {
+    buildCalendarStaticParts();
+    renderCalendarDays();
+
+    const popover = document.getElementById('calPopover');
+    const btn = document.getElementById('calBtn');
+
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const open = popover.classList.toggle('open');
+        btn.classList.toggle('open', open);
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!popover.contains(e.target) && !btn.contains(e.target)) {
+            popover.classList.remove('open');
+            btn.classList.remove('open');
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            popover.classList.remove('open');
+            btn.classList.remove('open');
+        }
+    });
+
+    // Prev / Next year
+    document.getElementById('calPrev').addEventListener('click', () => {
+        if (state.calYear <= MIN_DATE.getFullYear()) return;
+        state.calYear -= 1;
+        renderCalendarDays();
+    });
+    document.getElementById('calNext').addEventListener('click', () => {
+        state.calYear += 1;
+        renderCalendarDays();
+    });
+    document.getElementById('calYear').addEventListener('change', (e) => {
+        state.calYear = parseInt(e.target.value, 10);
+        renderCalendarDays();
+    });
+
+    // Month click → jump to that month's album
+    document.getElementById('calMonths').addEventListener('click', (e) => {
+        const btnEl = e.target.closest('.cal-month-btn');
+        if (!btnEl || btnEl.disabled) return;
+        const m = parseInt(btnEl.dataset.m, 10);
+        state.calMonth = m;
+        setFilter('month', monthKeyYM(state.calYear, m));
+        renderCalendarDays();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => {
+            popover.classList.remove('open');
+            document.getElementById('calBtn').classList.remove('open');
+        }, 220);
+    });
+
+    document.getElementById('calClear').addEventListener('click', () => {
+        state.selectedDay = null;
+        setFilter('all', null);
+        renderCalendarDays();
+    });
+}
+
+/* ====================================================================
+   Gallery rendering + filter (GSAP Flip)
+   ==================================================================== */
+function buildGallery() {
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = '';
+
+    const cols = 3;
+    const colEls = [];
+    for (let i = 0; i < cols; i++) {
+        const c = document.createElement('div');
+        c.className = 'gallery-col';
+        c.dataset.col = i;
+        gallery.appendChild(c);
+        colEls.push(c);
+    }
+
+    // Distribute by index (round-robin keeps date order roughly maintained)
+    PHOTOS.forEach((p, i) => {
+        const item = document.createElement('div');
+        item.className = 'photo-item';
+        item.dataset.id = p.id;
+        item.dataset.dateKey = dateKey(p.date);
+        item.dataset.monthKey = monthKey(p.date);
+
+        const aspect = p.isPortrait ? '2 / 3' : '3 / 2';
+        const dateLabel = `${p.date.getFullYear()} · ${MONTH_LABELS_EN[p.date.getMonth()]} · ${pad2(p.date.getDate())}`;
+        const bgs = ['#1a1a1a','#1d1d1f','#181818','#1f1d1a','#1a1c1f'];
+        const bg = bgs[i % bgs.length];
+
+        item.innerHTML = `
+            <span class="photo-num">No.${pad2(PHOTOS.length - i)}</span>
+            <div class="photo-aspect" style="aspect-ratio: ${aspect}; background: linear-gradient(155deg, ${bg} 0%, #0e0e0e 100%);">
+                <img data-src="${p.src}" alt="${dateLabel}">
+            </div>
+            <div class="photo-meta">
+                <span class="photo-date">${p.date.getFullYear()} · ${MONTH_LABELS_EN[p.date.getMonth()]} · ${pad2(p.date.getDate())}</span>
+                <span class="photo-day">${p.isPortrait ? 'PORTRAIT' : 'LANDSCAPE'}</span>
+            </div>
+        `;
+
+        colEls[i % cols].appendChild(item);
+    });
+
+    // Append the empty-state at the end of the gallery (sibling of cols)
+    const empty = document.getElementById('galleryEmpty');
+    gallery.appendChild(empty);
+}
+
+/* IntersectionObserver: lazy fade-in once in view */
+function initImageObserver() {
+    const items = document.querySelectorAll('.photo-item');
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const item = entry.target;
+            const img = item.querySelector('img');
+            if (!img) {
+                // No image (date-stamp placeholder mode) — just mark loaded.
+                item.classList.add('loaded');
+                io.unobserve(item);
+                return;
+            }
+            if (item.dataset.loaded === '1') {
+                img.classList.add('in-view');
+                return;
+            }
+            const src = img.dataset.src;
+            // Fallback placeholder on error
+            img.onerror = () => {
+                img.onerror = null;
+                img.src = `https://placehold.co/600x900/151515/3a3a3a/png?text=%E2%97%87`;
+            };
+            img.onload = () => {
+                item.classList.add('loaded');
+                img.classList.add('in-view');
+            };
+            img.src = src;
+            item.dataset.loaded = '1';
+            io.unobserve(item);
+        });
+    }, { rootMargin: '200px 0px', threshold: 0.05 });
+
+    items.forEach(it => io.observe(it));
+}
+
+/* ====================================================================
+   Filtering — uses GSAP Flip for smooth reorder/reveal transitions
+   ==================================================================== */
+function matchesFilter(item) {
+    if (state.filterMode === 'all') return true;
+    if (state.filterMode === 'month') return item.dataset.monthKey === state.filterKey;
+    if (state.filterMode === 'day')   return item.dataset.dateKey  === state.filterKey;
+    return true;
+}
+
+function setFilter(mode, key) {
+    state.filterMode = mode;
+    state.filterKey  = key;
+
+    // Clear selectedDay when leaving day-mode
+    if (mode !== 'day') state.selectedDay = null;
+
+    const calBtn = document.getElementById('calBtn');
+    calBtn.classList.toggle('has-selection', mode === 'day');
+
+    updatePillsActive();
+    updateActiveFilterLabel();
+    applyFilterWithFlip();
+}
+
+function updateActiveFilterLabel() {
+    const valEl = document.getElementById('activeFilterValue');
+    const cntEl = document.getElementById('activeFilterCount');
+
+    let visibleCount = 0;
+    document.querySelectorAll('.photo-item').forEach(it => {
+        if (matchesFilter(it)) visibleCount++;
+    });
+
+    let label = 'All';
+    if (state.filterMode === 'month' && state.filterKey) {
+        const [y, m] = state.filterKey.split('-').map(Number);
+        label = `${MONTH_LABELS_FULL[m-1]} ${y}`;
+    } else if (state.filterMode === 'day' && state.selectedDay) {
+        const d = state.selectedDay;
+        label = `${MONTH_LABELS_FULL[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+    }
+    valEl.textContent = label;
+    cntEl.textContent = `${pad2(visibleCount)} ${visibleCount === 1 ? 'frame' : 'frames'}`;
+
+    document.getElementById('galleryEmpty').classList.toggle('show', visibleCount === 0);
+
+    // keep step buttons in sync with the current filter
+    if (typeof updateStepButtons === 'function') updateStepButtons();
+}
+
+function applyFilterWithFlip() {
+    if (typeof Flip === 'undefined') {
+        // Fallback: no animation
+        document.querySelectorAll('.photo-item').forEach(it => {
+            it.classList.toggle('is-hidden', !matchesFilter(it));
+        });
+        return;
+    }
+
+    const items = gsap.utils.toArray('.photo-item');
+    const state0 = Flip.getState(items);
+
+    items.forEach(it => {
+        it.classList.toggle('is-hidden', !matchesFilter(it));
+    });
+
+    Flip.from(state0, {
+        duration: 0.55,
+        scale: true,
+        ease: 'power2.inOut',
+        stagger: 0.025,
+        absolute: true,
+        onEnter: (els) => gsap.fromTo(els,
+            { opacity: 0, scale: 0.85 },
+            { opacity: 1, scale: 1, duration: 0.65, ease: 'power2.out' }
+        ),
+        onLeave: (els) => gsap.to(els,
+            { opacity: 0, scale: 0.85, duration: 0.45, ease: 'power2.in' }
+        ),
+    });
+}
+
+/* ====================================================================
+   Month step buttons (prev / next month)
+   left = Next (newer) month, right = Previous (older) month
+   ==================================================================== */
+function getCurrentFilterMonth() {
+    // Returns {y, m} representing the "active" month context for stepping.
+    if (state.filterMode === 'month' && state.filterKey) {
+        const [y, m] = state.filterKey.split('-').map(Number);
+        return { y, m: m - 1 };
+    }
+    if (state.filterMode === 'day' && state.selectedDay) {
+        return { y: state.selectedDay.getFullYear(), m: state.selectedDay.getMonth() };
+    }
+    // 'all' → anchor on the current real month
+    const now = new Date();
+    return { y: now.getFullYear(), m: now.getMonth() };
+}
+function addMonths(y, m, delta) {
+    const d = new Date(y, m + delta, 1);
+    return { y: d.getFullYear(), m: d.getMonth() };
+}
+function isMonthBeforeMin(y, m) {
+    if (y < MIN_DATE.getFullYear()) return true;
+    if (y === MIN_DATE.getFullYear() && m < MIN_DATE.getMonth()) return true;
+    return false;
+}
+function isMonthAfterNow(y, m) {
+    const now = new Date();
+    if (y > now.getFullYear()) return true;
+    if (y === now.getFullYear() && m > now.getMonth()) return true;
+    return false;
+}
+
+function updateStepButtons() {
+    const cur  = getCurrentFilterMonth();
+    const next = addMonths(cur.y, cur.m, +1);  // forward in time (newer)
+    const prev = addMonths(cur.y, cur.m, -1);  // backward (older)
+
+    const nextBtn  = document.getElementById('stepNext');
+    const prevBtn  = document.getElementById('stepPrev');
+    const nextLab  = document.getElementById('stepNextTarget');
+    const prevLab  = document.getElementById('stepPrevTarget');
+
+    const nextDisabled = isMonthAfterNow(next.y, next.m);
+    const prevDisabled = isMonthBeforeMin(prev.y, prev.m);
+
+    nextBtn.disabled = nextDisabled;
+    prevBtn.disabled = prevDisabled;
+
+    nextLab.textContent = nextDisabled
+        ? '— · —'
+        : `${MONTH_LABELS_EN[next.m]} ${next.y}`;
+    prevLab.textContent = prevDisabled
+        ? '— · —'
+        : `${MONTH_LABELS_EN[prev.m]} ${prev.y}`;
+}
+
+function initStepButtons() {
+    document.getElementById('stepNext').addEventListener('click', () => {
+        const cur  = getCurrentFilterMonth();
+        const next = addMonths(cur.y, cur.m, +1);
+        if (isMonthAfterNow(next.y, next.m)) return;
+        // Move calendar view too, so the popover stays in sync.
+        state.calYear = next.y; state.calMonth = next.m;
+        if (typeof renderCalendarDays === 'function') renderCalendarDays();
+        setFilter('month', monthKeyYM(next.y, next.m));
+        // Scroll back to top so the new month's first photos are visible
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    document.getElementById('stepPrev').addEventListener('click', () => {
+        const cur  = getCurrentFilterMonth();
+        const prev = addMonths(cur.y, cur.m, -1);
+        if (isMonthBeforeMin(prev.y, prev.m)) return;
+        state.calYear = prev.y; state.calMonth = prev.m;
+        if (typeof renderCalendarDays === 'function') renderCalendarDays();
+        setFilter('month', monthKeyYM(prev.y, prev.m));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    updateStepButtons();
+}
+
+/* ====================================================================
+   Nav helpers (mobile menu + scroll bg)
+   ==================================================================== */
+function initNav() {
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (hamburger) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+        });
+    }
+    document.querySelectorAll('.mobile-link').forEach(link => link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('active');
+    }));
+
+    // Subtle metallic gloss on Join CTA (matches main site)
+    const cta = document.querySelector('.nav-cta');
+    if (cta) {
+        const gloss = document.createElement('div');
+        gloss.style.cssText = 'position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .2s;z-index:2;';
+        cta.appendChild(gloss);
+        cta.addEventListener('mousemove', e => {
+            const rect = cta.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            gloss.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(255,255,255,0.38) 0%, rgba(220,215,200,0.15) 40%, transparent 70%)`;
+            gloss.style.opacity = '1';
+        });
+        cta.addEventListener('mouseleave', () => { gloss.style.opacity = '0'; });
+    }
+}
+
+/* ====================================================================
+   Init
+   ==================================================================== */
+document.addEventListener('DOMContentLoaded', () => {
+    initNav();
+    buildPills();
+    initPillsNav();
+    buildGallery();
+    initImageObserver();
+    initCalendar();
+    initStepButtons();
+    updateActiveFilterLabel();
+});
+</script>
+
+</body>
+</html>
