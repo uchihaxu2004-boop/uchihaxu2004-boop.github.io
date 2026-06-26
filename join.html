@@ -798,12 +798,25 @@ body {
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    transition: color 0.3s, border-color 0.3s, background 0.3s;
+    z-index: 0;
+    transition: color 0.4s var(--transition-smooth), border-color 0.4s var(--transition-smooth);
+}
+.btn-submit::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: var(--color-white);
+    transform: translateX(-100%);
+    transition: transform 0.4s var(--transition-smooth);
+    z-index: -1;
 }
 .btn-submit:hover {
     color: var(--color-bg);
-    background: var(--color-white);
     border-color: var(--color-white);
+}
+.btn-submit:hover::before {
+    transform: translateX(0);
 }
 .btn-loading { display: none; }
 .btn-submit.loading .btn-text { display: none; }
