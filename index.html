@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dajcxun</title>
+    <meta name="description" content="The personal site of dajcxun — a dark, editorial archive of photos, travels, and work.">
+    <meta name="author" content="dajcxun">
+    <link rel="canonical" href="https://dajcxun.com/">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="dajcxun">
+    <meta property="og:title" content="dajcxun">
+    <meta property="og:description" content="The personal site of dajcxun — a dark, editorial archive of photos, travels, and work.">
+    <meta property="og:url" content="https://dajcxun.com/">
+    <meta property="og:image" content="https://dajcxun.com/og-image.jpg">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="dajcxun">
+    <meta name="twitter:description" content="The personal site of dajcxun — a dark, editorial archive of photos, travels, and work.">
+    <meta name="twitter:image" content="https://dajcxun.com/og-image.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+    --color-bg: #0a0a0a;
+    --color-bg-alt: #111111;
+    --color-white: #ffffff;
+    --color-silver: #c0c0c0;
+    --color-silver-dim: #8a8a8a;
+    --color-accent: #e8e8e8;
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-cn: 'Noto Serif TC', serif;
+    --transition-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+    font-family: var(--font-body);
+    background: var(--color-bg);
+    color: var(--color-white);
+    overflow-x: hidden;
+}
+.noise-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 9000; opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+.section { padding: 5rem 3rem 3rem; position: relative; }
+.home { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; overflow: hidden; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 768px) {
+    .section { padding: 6rem 1.5rem 3rem; }
+}
+.cl-hero { position: relative; z-index: 2; width: 100%; max-width: 760px; padding: 0 1.5rem; }
+.cl-greeting { display: flex; align-items: center; justify-content: center; white-space: nowrap; font-family: var(--font-display); font-weight: 400; font-size: clamp(1.1rem, 4.6vw, 3rem); line-height: 1.1; color: var(--color-silver); letter-spacing: 0.01em; margin-bottom: 2.75rem; animation: fadeInUp 0.9s var(--transition-smooth) backwards; }
+.cl-name { font-family: var(--font-cn); color: #f5f5f5; }
+.cl-form { position: relative; text-align: left; animation: fadeInUp 0.9s 0.12s var(--transition-smooth) backwards; }
+.cl-box { display: flex; align-items: center; gap: 0.6rem; background: rgba(255, 255, 255, 0.045); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 0.5rem 0.6rem; transition: border-color 0.3s var(--transition-smooth), background 0.3s; }
+.cl-form:focus-within .cl-box { border-color: rgba(255, 255, 255, 0.28); background: rgba(255, 255, 255, 0.06); }
+.cl-input { flex: 1; min-width: 0; background: transparent; border: none; outline: none; color: var(--color-white); font-family: var(--font-body); font-size: 1.05rem; line-height: 1.5; padding: 0.4rem 0.3rem; }
+.cl-input::placeholder { color: var(--color-silver-dim); }
+.cl-plus { width: 38px; height: 38px; flex: none; border-radius: 50%; border: none; background: transparent; color: var(--color-silver); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.25s var(--transition-smooth); }
+.cl-plus svg { width: 18px; height: 18px; transition: transform 0.3s var(--transition-smooth); }
+.cl-plus:hover { color: var(--color-white); }
+.cl-form.menu-open .cl-plus svg { transform: rotate(45deg); }
+.cl-navmenu { position: absolute; left: 0; top: calc(100% + 0.6rem); min-width: 210px; list-style: none; background: #141414; border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 0.4rem; box-shadow: 0 24px 60px rgba(0,0,0,0.6); z-index: 30; }
+.cl-navmenu[hidden] { display: none; }
+.cl-navmenu button { display: flex; width: 100%; align-items: center; padding: 0.6rem 0.9rem; background: transparent; border: none; border-radius: 9px; color: var(--color-silver); font-family: var(--font-display); font-size: 0.85rem; letter-spacing: 0.14em; text-transform: uppercase; text-align: left; cursor: pointer; transition: background 0.2s, color 0.2s; }
+.cl-navmenu button:hover { background: rgba(255,255,255,0.06); color: var(--color-white); }
+.cl-submit { width: 36px; height: 36px; flex: none; border-radius: 50%; border: none; background: var(--color-white); color: #0a0a0a; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.25s var(--transition-bounce), opacity 0.25s; }
+.cl-submit:hover { transform: scale(1.08); }
+.cl-submit svg { width: 17px; height: 17px; }
+.cl-suggest { position: absolute; left: 0; right: 0; top: calc(100% + 0.6rem); list-style: none; background: #141414; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 16px; padding: 0.5rem; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6); z-index: 20; }
+.cl-suggest[hidden] { display: none; }
+.cl-sg { display: flex; align-items: center; gap: 0.9rem; padding: 0.8rem 1rem; border-radius: 10px; text-decoration: none; transition: background 0.2s; }
+.cl-sg:hover, .cl-sg.is-top { background: rgba(255, 255, 255, 0.05); }
+.cl-sg-t { font-family: var(--font-display); font-size: 1rem; color: var(--color-white); }
+.cl-sg-d { flex: 1; font-size: 0.82rem; color: var(--color-silver-dim); }
+.cl-sg-arrow { font-family: var(--font-display); color: var(--color-silver); }
+</style>
+</head>
+<body>
+
+
+    <!-- Home Section -->
+    <section id="home" class="section home">
+        <div class="cl-hero">
+            <h1 class="cl-greeting">
+                <span id="greetText">Welcome to <span class="cl-name">大軍</span>'s Life Archive</span>
+            </h1>
+
+            <form class="cl-form" id="searchBox" role="search">
+                <div class="cl-box">
+                    <button type="button" class="cl-plus" id="clPlus" aria-label="Open menu" aria-haspopup="true" aria-expanded="false">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                    </button>
+                    <input type="text" id="searchInput" class="cl-input" autocomplete="off"
+                           placeholder="What are you looking for?" aria-label="Search the archive">
+                    <button type="submit" class="cl-submit" aria-label="Go">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+                    </button>
+                </div>
+                <ul class="cl-navmenu" id="navMenu" hidden>
+                    <li><button type="button" data-q="Home">Home</button></li>
+                    <li><button type="button" data-q="Log">Log</button></li>
+                    <li><button type="button" data-q="Adventures">Adventures</button></li>
+                    <li><button type="button" data-q="Craft">Craft</button></li>
+                    <li><button type="button" data-q="Reach">Reach</button></li>
+                    <li><button type="button" data-q="Join">Join</button></li>
+                </ul>
+                <ul class="cl-suggest" id="suggest" hidden></ul>
+            </form>
+        </div>
+        <div class="noise-overlay"></div>
+    </section>
+
+<script>
+/* 時段問候 + 站內搜尋 */
+function initHomeSearch() {
+    const form = document.getElementById('searchBox');
+    if (!form) return;
+    const input = document.getElementById('searchInput');
+    const list = document.getElementById('suggest');
+    const plus = document.getElementById('clPlus');
+    const navMenu = document.getElementById('navMenu');
+    const INDEX = [
+        { t: 'Home',       url: 'index.html',      d: 'Back to the start',            k: 'home start index 首頁 回首頁' },
+        { t: 'Log',        url: 'log.html',        d: 'Daily life · photo journal',   k: 'log daily life photo photos journal diary 日常 日記 照片 生活' },
+        { t: 'Adventures', url: 'adventures.html', d: 'Travels by country & place',    k: 'adventures travel trips places country countries 旅遊 旅行 國家 地方' },
+        { t: 'Craft',      url: 'craft.html',      d: 'Projects, reports & work',      k: 'craft projects project work reports portfolio 作品 報告 專案' },
+        { t: 'Reach',      url: 'reach.html',      d: 'Find me across the web',        k: 'reach contact email social links 聯絡 社群' },
+        { t: 'Join',       url: 'join.html',       d: 'Subscribe to the letter',       k: 'join subscribe newsletter member letter 訂閱 會員' },
+    ];
+    function esc(s) { return s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+    function render() {
+        const q = input.value.trim().toLowerCase();
+        const items = q === '' ? [] : INDEX.filter(x => (x.t + ' ' + x.k + ' ' + x.d).toLowerCase().includes(q));
+        if (!items.length) { list.hidden = true; list.innerHTML = ''; return; }
+        list.innerHTML = items.map((x, i) =>
+            `<li><a class="cl-sg${i === 0 ? ' is-top' : ''}" href="${x.url}">` +
+            `<span class="cl-sg-t">${esc(x.t)}</span><span class="cl-sg-d">${esc(x.d)}</span>` +
+            `<span class="cl-sg-arrow" aria-hidden="true">&#8599;</span></a></li>`).join('');
+        list.hidden = false;
+    }
+    function bestMatch(q) {
+        q = q.trim().toLowerCase();
+        if (!q) return null;
+        return INDEX.find(x => (x.t + ' ' + x.k + ' ' + x.d).toLowerCase().includes(q)) || null;
+    }
+    function setMenu(open) {
+        navMenu.hidden = !open;
+        form.classList.toggle('menu-open', open);
+        if (plus) plus.setAttribute('aria-expanded', String(open));
+        if (open) list.hidden = true;
+    }
+    input.addEventListener('input', () => { setMenu(false); render(); });   // 自行打字 → 顯示建議
+    input.addEventListener('focus', () => { setMenu(false); });
+    if (plus) {
+        plus.addEventListener('click', (e) => { e.stopPropagation(); setMenu(navMenu.hidden); });
+    }
+    navMenu.querySelectorAll('button[data-q]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            input.value = btn.dataset.q;   // 自動填入搜尋框
+            setMenu(false);
+            list.hidden = true;            // 選單填入：不顯示下方建議
+            input.focus();
+        });
+    });
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();                // Enter 或按 → 都跳轉
+        const m = bestMatch(input.value);
+        if (m) window.location.href = m.url;
+    });
+    document.addEventListener('click', (e) => {
+        if (!form.contains(e.target)) { list.hidden = true; setMenu(false); }
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { list.hidden = true; setMenu(false); }
+    });
+}
+document.addEventListener('DOMContentLoaded', () => {
+    initHomeSearch();
+});
+</script>
+
+</body>
+</html>

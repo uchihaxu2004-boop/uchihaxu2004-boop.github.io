@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# 內部 / 個人檔案，不公開
+CLAUDE.md
+ui.md
+.claude/
+
+# 後端原始碼（非靜態站內容）
+apps-script/
