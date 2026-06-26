@@ -870,13 +870,12 @@ body {
     color: var(--color-silver-dim);
     text-decoration: none;
     padding: 0.28rem 0.6rem;
-    border: 1px solid rgba(255,255,255,0.14);
+    border: none;
     border-radius: 999px;
-    transition: color 0.25s, border-color 0.25s, background 0.25s;
+    transition: color 0.25s, background 0.25s;
 }
 .portfolio-src:hover {
     color: var(--color-white);
-    border-color: rgba(255,255,255,0.45);
     background: rgba(255,255,255,0.06);
 }
 .portfolio-chevron {
@@ -977,13 +976,13 @@ body {
     text-transform: uppercase;
     color: var(--color-silver);
     background: transparent;
-    border: 1px solid rgba(255,255,255,0.18);
+    border: none;
     border-radius: 999px;
     padding: 0.4rem 0.85rem;
     cursor: pointer;
-    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    transition: color 0.2s, background 0.2s;
 }
-.viewer-btn:hover { color: var(--color-white); border-color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.06); }
+.viewer-btn:hover { color: var(--color-white); background: rgba(255,255,255,0.06); }
 .viewer-btn.is-hidden { display: none; }
 .viewer-close { width: 34px; height: 34px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
 .viewer-close svg { width: 15px; height: 15px; }
@@ -1053,8 +1052,6 @@ body {
         <div class="viewer-head">
             <span class="viewer-title" id="viewerTitle"></span>
             <div class="viewer-actions">
-                <button class="viewer-btn" id="viewerCopy" type="button">Copy</button>
-                <a class="viewer-btn" id="viewerOpen" target="_blank" rel="noopener">Open</a>
                 <button class="viewer-btn viewer-close" id="viewerClose" type="button" aria-label="Close">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
                         <path d="M6 6l12 12M18 6L6 18"/>
@@ -1187,8 +1184,7 @@ const HL_LANG = { py: 'python', r: 'r' };
 const OFFICE_EXT = ['xlsx', 'xls', 'pptx', 'ppt', 'docx', 'doc'];
 
 const viewer = {
-    overlay: null, body: null, title: null, copy: null, open: null,
-    codeText: '', lastFocus: null,
+    overlay: null, body: null, title: null, lastFocus: null,
 };
 
 function escapeHtml(s) {
@@ -1201,8 +1197,6 @@ function openViewer(href) {
     const ext = (filename.split('.').pop() || '').toLowerCase();
     v.lastFocus = document.activeElement;
     v.title.textContent = filename;
-    v.open.href = href;
-    v.copy.classList.add('is-hidden');
     v.body.innerHTML = '<div class="viewer-loading">Loading…</div>';
     v.overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -1221,8 +1215,6 @@ function openViewer(href) {
                 pre.appendChild(code);
                 v.body.appendChild(pre);
                 if (window.hljs) hljs.highlightElement(code);
-                v.copy.classList.remove('is-hidden');
-                v.copy.textContent = 'Copy';
             })
             .catch(() => {
                 v.body.innerHTML = '<div class="viewer-loading">無法載入此檔，請改用 Open 下載。</div>';
@@ -1253,19 +1245,10 @@ function initViewer() {
     v.overlay = document.getElementById('viewer');
     v.body = document.getElementById('viewerBody');
     v.title = document.getElementById('viewerTitle');
-    v.copy = document.getElementById('viewerCopy');
-    v.open = document.getElementById('viewerOpen');
     document.getElementById('viewerClose').addEventListener('click', closeViewer);
     v.overlay.addEventListener('click', (e) => { if (e.target === v.overlay) closeViewer(); });
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && v.overlay.classList.contains('open')) closeViewer();
-    });
-    v.copy.addEventListener('click', () => {
-        if (!v.codeText) return;
-        navigator.clipboard.writeText(v.codeText).then(() => {
-            v.copy.textContent = 'Copied';
-            setTimeout(() => { v.copy.textContent = 'Copy'; }, 1600);
-        });
     });
 }
 
