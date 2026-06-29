@@ -1,12 +1,42 @@
 (() => {
     const PAGES = [
-        { t: 'Home',       url: 'index.html',      d: 'Back to the archive entrance', k: 'home index archive 首頁' },
-        { t: 'Log',        url: 'log.html',        d: 'Daily life · photo journal',   k: 'log daily life photo photos journal diary 日常 日記 照片 生活' },
-        { t: 'Adventures', url: 'adventures.html', d: 'Travels by country & place',   k: 'adventures travel trips places country countries 旅遊 旅行 國家 地方' },
-        { t: 'Craft',      url: 'craft.html',      d: 'Projects, reports & work',     k: 'craft projects project work reports portfolio 作品 報告 專案' },
-        { t: 'Reach',      url: 'reach.html',      d: 'Find me across the web',       k: 'reach contact email social links 聯絡 社群' },
-        { t: 'Join',       url: 'join.html',       d: 'Subscribe to the letter',      k: 'join subscribe newsletter member letter 訂閱 會員' },
+        { t: 'Home',       url: 'index.html',      d: 'Back to the archive entrance', k: 'home index archive entrance start 首頁 回首頁 入口 主頁 開始' },
+        { t: 'Log',        url: 'log.html',        d: 'Daily life · photo journal',   k: 'log daily life photo photos journal diary recent lately now today update updates doing 日常 日記 照片 生活 近況 最近 現在 今天 這陣子 動態 在幹嘛 幹嘛 在做什麼 做什麼 在忙 過得如何 大軍在幹嘛 他在幹嘛 你在幹嘛' },
+        { t: 'Adventures', url: 'adventures.html', d: 'Travels by country & place',   k: 'adventures adventure travel travels trip trips places place country countries where went visited abroad 旅遊 旅行 旅程 出國 出遊 玩 去哪 去哪玩 去過 國家 地方 地點 景點 哪裡' },
+        { t: 'Craft',      url: 'craft.html',      d: 'Projects, reports & work',     k: 'craft projects project work works reports report portfolio making built 作品 報告 專案 作品集 做的東西 在做什麼專案 成果' },
+        { t: 'Reach',      url: 'reach.html',      d: 'Find me across the web',       k: 'reach contact email social links message find connect 聯絡 聯繫 找他 找你 怎麼找 信箱 電子郵件 社群 連結 留言 找大軍' },
+        { t: 'Join',       url: 'join.html',       d: 'Subscribe to the letter',      k: 'join subscribe newsletter member letter follow sign up 訂閱 加入 會員 電子報 通訊 追蹤 訂閱電子報 成為會員' },
     ];
+    // Pre-split each page's keyword bank for intent scoring.
+    PAGES.forEach(p => { p.kws = p.k.toLowerCase().split(/\s+/).filter(Boolean); });
+
+    // Score how well a page answers the query. Works for both short typing
+    // ("log") and full natural-language sentences ("最近大軍在幹嘛").
+    function scorePage(page, q) {
+        const hay = (page.t + ' ' + page.k + ' ' + page.d).toLowerCase();
+        let score = 0;
+        // 1) page keywords that appear inside the query → catches whole sentences
+        for (const kw of page.kws) {
+            if (kw.length >= 2 && q.includes(kw)) score += kw.length;
+        }
+        // 2) latin word-tokens from the query found in the page → partial typing
+        for (const tok of q.split(/[^a-z0-9]+/).filter(t => t.length >= 2)) {
+            if (hay.includes(tok)) score += tok.length;
+        }
+        // 3) whole query is a substring of the page text → original behaviour
+        if (hay.includes(q)) score += q.length;
+        return score;
+    }
+
+    function rankPages(q) {
+        q = q.trim().toLowerCase();
+        if (!q) return [];
+        return PAGES
+            .map(p => ({ page: p, score: scorePage(p, q) }))
+            .filter(x => x.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .map(x => x.page);
+    }
 
     function esc(s) {
         return s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -44,8 +74,7 @@
         if (!form || !input || !list) return;
 
         function render() {
-            const q = input.value.trim().toLowerCase();
-            const items = q === '' ? [] : PAGES.filter(x => (x.t + ' ' + x.k + ' ' + x.d).toLowerCase().includes(q));
+            const items = rankPages(input.value);
             if (!items.length) {
                 list.hidden = true;
                 list.innerHTML = '';
@@ -61,9 +90,7 @@
         }
 
         function bestMatch(q) {
-            q = q.trim().toLowerCase();
-            if (!q) return null;
-            return PAGES.find(x => (x.t + ' ' + x.k + ' ' + x.d).toLowerCase().includes(q)) || null;
+            return rankPages(q)[0] || null;
         }
 
         function setMenu(open) {
