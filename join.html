@@ -806,7 +806,11 @@ body {
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: var(--color-white);
+    background: linear-gradient(115deg,
+        #8f8f8f 0%, #c8c8c8 14%, #f4f4f4 30%, #ffffff 40%,
+        #bdbdbd 52%, #ededed 66%, #9a9a9a 82%, #d2d2d2 100%);
+    background-size: 250% 100%;
+    background-position: 100% 0;
     transform: translateX(-100%);
     transition: transform 0.4s var(--transition-smooth);
     z-index: -1;
@@ -817,9 +821,34 @@ body {
 }
 .btn-submit:hover::before {
     transform: translateX(0);
+    animation: vipSheen 2.4s linear infinite;
 }
+@keyframes vipSheen {
+    from { background-position: 100% 0; }
+    to   { background-position: -100% 0; }
+}
+/* JOIN -> VIP text swap */
+.btn-text, .btn-vip {
+    display: inline-block;
+    transition: opacity 0.35s var(--transition-smooth), transform 0.35s var(--transition-smooth);
+}
+.btn-vip {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(45%);
+    letter-spacing: 0.32em;
+    color: var(--color-bg);
+    pointer-events: none;
+}
+.btn-submit:hover .btn-text { opacity: 0; transform: translateY(-45%); }
+.btn-submit:hover .btn-vip  { opacity: 1; transform: translateY(0); }
 .btn-loading { display: none; }
-.btn-submit.loading .btn-text { display: none; }
+.btn-submit.loading .btn-text,
+.btn-submit.loading .btn-vip { display: none; }
 .btn-submit.loading .btn-loading { display: inline; }
 
 .form-success {
@@ -963,7 +992,7 @@ body {
         <form class="member-form join-form" id="memberForm" novalidate>
             <div class="form-group"><input type="text" id="name" name="name" required placeholder="Your name" autocomplete="given-name"></div>
             <div class="form-group"><input type="email" id="email" name="email" required placeholder="Email" autocomplete="email"></div>
-            <button type="submit" class="btn-submit"><span class="btn-text">Join</span><span class="btn-loading">Sending…</span></button>
+            <button type="submit" class="btn-submit"><span class="btn-text">Join</span><span class="btn-vip" aria-hidden="true">VIP</span><span class="btn-loading">Sending…</span></button>
         </form>
         <div class="form-success" id="formSuccess"><p>You're in. Talk soon.</p></div>
         <section class="site-search-panel" data-site-search aria-label="Site search"></section>
