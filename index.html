@@ -55,6 +55,10 @@ body {
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 768px) {
     .section { padding: 6rem 1.5rem 3rem; }
+    /* 移除多餘的雙重邊距，讓搜尋框加寬；字級略縮使整句完整顯示。
+       提高特異度以覆寫前面定義的基礎規則 */
+    .home .cl-hero { padding: 0; }
+    .cl-box .cl-input { font-size: 0.95rem; }
 }
 .cl-hero { position: relative; z-index: 2; width: 100%; max-width: 760px; padding: 0 1.5rem; }
 .cl-greeting { display: flex; align-items: center; justify-content: center; white-space: nowrap; font-family: var(--font-display); font-weight: 400; font-size: clamp(1.1rem, 4.6vw, 3rem); line-height: 1.1; color: var(--color-silver); letter-spacing: 0.01em; margin-bottom: 2.75rem; animation: fadeInUp 0.9s var(--transition-smooth) backwards; }
@@ -132,9 +136,9 @@ function initHomeSearch() {
         { t: 'Home',       url: 'index.html',      d: 'Back to the start',            k: 'home index archive entrance start 首頁 回首頁 入口 主頁 開始' },
         { t: 'Log',        url: 'log.html',        d: 'Daily life · photo journal',   k: 'log daily life photo photos journal diary recent lately now today update updates doing 日常 日記 照片 生活 近況 最近 現在 今天 這陣子 動態 在幹嘛 幹嘛 在做什麼 做什麼 在忙 過得如何 大軍在幹嘛 他在幹嘛 你在幹嘛' },
         { t: 'Adventures', url: 'adventures.html', d: 'Travels by country & place',    k: 'adventures adventure travel travels trip trips places place country countries where went visited abroad 旅遊 旅行 旅程 出國 出遊 玩 去哪 去哪玩 去過 國家 地方 地點 景點 哪裡' },
-        { t: 'Craft',      url: 'craft.html',      d: 'Projects, reports & work',      k: 'craft projects project work works reports report portfolio making built 作品 報告 專案 作品集 做的東西 做什麼 做什麼報告 做什麼作品 在做什麼 在做什麼專案 成果' },
-        { t: 'Reach',      url: 'reach.html',      d: 'Find me across the web',        k: 'reach contact email social links message find connect 聯絡 聯繫 找他 找你 怎麼 怎麼找 怎麼聯絡 信箱 電子郵件 社群 連結 留言 找大軍' },
-        { t: 'Join',       url: 'join.html',       d: 'Subscribe to the letter',       k: 'join subscribe newsletter member letter follow sign up 訂閱 加入 會員 電子報 通訊 追蹤 怎麼 怎麼加入 訂閱電子報 成為會員' },
+        { t: 'Craft',      url: 'craft.html',      d: 'Projects, reports & work',      k: 'craft projects project work works reports report portfolio making built 作品 報告 專案 作品集 做的東西 在做什麼專案 成果' },
+        { t: 'Reach',      url: 'reach.html',      d: 'Find me across the web',        k: 'reach contact email social links message find connect 聯絡 聯繫 找他 找你 怎麼找 信箱 電子郵件 社群 連結 留言 找大軍' },
+        { t: 'Join',       url: 'join.html',       d: 'Subscribe to the letter',       k: 'join subscribe newsletter member letter follow sign up 訂閱 加入 會員 電子報 通訊 追蹤 訂閱電子報 成為會員' },
     ];
     INDEX.forEach(p => { p.kws = p.k.toLowerCase().split(/\s+/).filter(Boolean); });
     function esc(s) { return s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
