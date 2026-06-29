@@ -258,6 +258,45 @@ body {
 }
 .city-chips:empty { display: none; }
 .city-chips .pill { padding: 0.4rem 1rem; }   /* 稍微縮短上下，免得這行太高 */
+
+/* 城市下拉選單：桌機隱藏、手機顯示，取代擁擠的城市 pill 排 */
+.city-dropdown { display: none; position: relative; margin-left: auto; }
+.city-dropdown:empty { display: none; }
+.city-dd-toggle {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 999px;
+    color: var(--color-silver);
+    font-family: var(--font-display);
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    cursor: pointer; white-space: nowrap;
+    transition: border-color 0.25s, color 0.25s, background 0.25s;
+}
+.city-dd-toggle:hover { color: var(--color-white); border-color: rgba(255,255,255,0.3); }
+.city-dd-toggle svg { width: 12px; height: 12px; flex: none; transition: transform 0.25s var(--transition-smooth); }
+.city-dropdown.open .city-dd-toggle svg { transform: rotate(180deg); }
+.city-dd-menu {
+    display: none;
+    position: absolute; right: 0; top: calc(100% + 0.5rem);
+    min-width: 170px; max-height: 60vh; overflow-y: auto;
+    background: #141414; border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px; padding: 0.35rem; z-index: 40;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+}
+.city-dropdown.open .city-dd-menu { display: block; }
+.city-dd-item {
+    display: block; width: 100%; text-align: left;
+    padding: 0.6rem 0.85rem; background: transparent; border: none;
+    border-radius: 8px; color: var(--color-silver);
+    font-family: var(--font-display); font-size: 0.72rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: pointer; white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+}
+.city-dd-item:hover { background: rgba(255,255,255,0.06); color: var(--color-white); }
+.city-dd-item.active { color: var(--color-white); background: rgba(255,255,255,0.05); }
 .active-filter-label { opacity: 0.6; }
 .active-filter-value {
     color: var(--color-white);
@@ -396,6 +435,9 @@ body {
 }
 
 @media (max-width: 768px) {
+    /* 手機：城市改用下拉選單，避免 pill 排太擠 */
+    .city-chips { display: none !important; }
+    .city-dropdown:not(:empty) { display: block; }
 }
 
 /* ── FOOTER (legacy, kept for reference but unused) ── */
@@ -469,7 +511,10 @@ body {
         <span class="active-filter-value" id="activeFilterValue">All</span>
         <span class="active-filter-count" id="activeFilterCount">—</span>
         <div class="city-chips" id="cityChips" role="tablist" aria-label="City filters">
-            <!-- city chips injected by JS -->
+            <!-- city chips injected by JS (桌機) -->
+        </div>
+        <div class="city-dropdown" id="cityDropdown" aria-label="City filter">
+            <!-- city dropdown injected by JS (手機) -->
         </div>
     </div>
 
@@ -771,26 +816,86 @@ function citiesOfCountry(code) {
    All 不顯示；再按已選城市 → 回到該國全部。 */
 function renderCityChips() {
     const wrap = document.getElementById('cityChips');
-    if (!wrap) return;
-    wrap.innerHTML = '';
+    const dd = document.getElementById('cityDropdown');
+    if (wrap) wrap.innerHTML = '';
+    if (dd) dd.innerHTML = '';
     const code = currentCountryCode();
-    if (!code) return;   // All → 不放
+    if (!code) return;   // All → 不放（pill 排與下拉皆空）
 
-    citiesOfCountry(code).forEach(region => {
-        const key = regionKey(code, region);
-        const btn = document.createElement('button');
-        btn.className = 'pill';
-        btn.dataset.key = key;
-        btn.setAttribute('role', 'tab');
-        btn.textContent = region;
-        if (state.filterMode === 'region' && state.filterKey === key) btn.classList.add('active');
-        btn.addEventListener('click', () => {
-            if (state.filterMode === 'region' && state.filterKey === key) setFilter('country', code); // 取消城市、留在該國
-            else setFilter('region', key);
+    const cities = citiesOfCountry(code);
+    const activeRegion = (state.filterMode === 'region' && state.filterKey)
+        ? state.filterKey.split('::')[1] : null;
+
+    // ── 桌機：城市 pill 排 ──
+    if (wrap) {
+        cities.forEach(region => {
+            const key = regionKey(code, region);
+            const btn = document.createElement('button');
+            btn.className = 'pill';
+            btn.dataset.key = key;
+            btn.setAttribute('role', 'tab');
+            btn.textContent = region;
+            if (state.filterMode === 'region' && state.filterKey === key) btn.classList.add('active');
+            btn.addEventListener('click', () => {
+                if (state.filterMode === 'region' && state.filterKey === key) setFilter('country', code); // 取消城市、留在該國
+                else setFilter('region', key);
+            });
+            wrap.appendChild(btn);
         });
-        wrap.appendChild(btn);
-    });
+    }
+
+    // ── 手機：城市下拉選單 ──
+    if (dd) {
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'city-dd-toggle';
+        toggle.setAttribute('aria-haspopup', 'listbox');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.innerHTML = `<span class="city-dd-label">${activeRegion || 'Select City'}</span>`
+            + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+
+        const menu = document.createElement('div');
+        menu.className = 'city-dd-menu';
+        menu.setAttribute('role', 'listbox');
+
+        const mkItem = (text, onClick, selected) => {
+            const it = document.createElement('button');
+            it.type = 'button';
+            it.className = 'city-dd-item' + (selected ? ' active' : '');
+            it.setAttribute('role', 'option');
+            it.setAttribute('aria-selected', selected ? 'true' : 'false');
+            it.textContent = text;
+            it.addEventListener('click', onClick);
+            return it;
+        };
+        // 「All cities」＝取消城市、留在該國
+        menu.appendChild(mkItem('All cities', () => setFilter('country', code), !activeRegion));
+        cities.forEach(region => {
+            const key = regionKey(code, region);
+            const selected = state.filterMode === 'region' && state.filterKey === key;
+            menu.appendChild(mkItem(region, () => setFilter('region', key), selected));
+        });
+
+        toggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const open = dd.classList.toggle('open');
+            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+
+        dd.appendChild(toggle);
+        dd.appendChild(menu);
+    }
 }
+
+/* 點擊選單外部時關閉城市下拉（只註冊一次） */
+document.addEventListener('click', (e) => {
+    const dd = document.getElementById('cityDropdown');
+    if (dd && dd.classList.contains('open') && !dd.contains(e.target)) {
+        dd.classList.remove('open');
+        const t = dd.querySelector('.city-dd-toggle');
+        if (t) t.setAttribute('aria-expanded', 'false');
+    }
+});
 
 function updateActiveFilterLabel() {
     const valEl = document.getElementById('activeFilterValue');
